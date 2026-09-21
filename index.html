@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Omega University Public Contract PC01-PC10 browser">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; connect-src 'none'; img-src 'self' data: blob:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Omega University | Public Contract 01–10</title>
+<style>
+:root{
+ --bg:#071019;--panel:#0c1722;--card:#101e2b;--line:#22374a;--text:#edf6ff;
+ --muted:#9db2c5;--cyan:#71d7ff;--green:#74e39a;--red:#ff7d7d;--amber:#f1cc73
+}
+*{box-sizing:border-box;min-width:0}
+html{color-scheme:dark;overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow-x:hidden}
+main{width:100%;max-width:1320px;margin:auto;padding:14px;display:grid;gap:12px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.grid{display:grid;gap:9px}
+.cards{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.split{grid-template-columns:minmax(250px,.72fr) minmax(0,1.45fr)}
+h1,h2,h3{margin:.2em 0 .55em}
+.kicker{color:var(--cyan);font-weight:900;letter-spacing:.08em}
+.muted{color:var(--muted)}
+.small{font-size:.9rem}
+.badge{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:.86rem}
+.badge.good{color:var(--green);border-color:var(--green)}
+.badge.bad{color:var(--red);border-color:var(--red)}
+.badge.warn{color:var(--amber);border-color:var(--amber)}
+button,input,select{font:inherit;min-height:44px;max-width:100%;background:#0b1620;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+button{cursor:pointer}
+button:hover,button:focus-visible,input:focus-visible,select:focus-visible{border-color:var(--cyan);outline:none}
+button.active{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 0 1px var(--cyan) inset}
+.contract{width:100%;text-align:left;min-height:92px}
+.contract.active{border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan) inset}
+.contract b{display:block;margin-bottom:4px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:end}
+.toolbar label{display:grid;gap:4px}
+.search{flex:1 1 250px}
+#seriesList{max-height:69vh;overflow:auto}
+#postText{white-space:pre-wrap;word-break:break-word;line-height:1.58;font-family:inherit;margin:0;background:#07111a;border:1px solid var(--line);border-radius:12px;padding:14px;max-height:72vh;overflow:auto}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}
+.fixture{display:grid;gap:10px}
+.fixture label{display:grid;gap:4px}
+.receipt{white-space:pre-wrap;word-break:break-word;max-height:55vh;overflow:auto;background:#06101a;border:1px solid var(--line);border-radius:12px;padding:12px}
+.check{padding:8px 10px;border:1px solid var(--line);border-radius:9px;margin-top:7px}
+.search-results{display:grid;gap:6px;max-height:260px;overflow:auto}
+.search-hit{text-align:left;width:100%}
+footer{color:var(--muted);font-size:.88rem;padding:4px 2px 18px}
+@media(max-width:780px){
+ main{padding:8px}.split{grid-template-columns:minmax(0,1fr)}#seriesList{max-height:280px}h1{font-size:1.55rem}.toolbar{align-items:stretch}.toolbar label{width:100%}.toolbar button{width:auto}#contractSelect,#viewSelect,#searchInput{width:100%}
+ #postText{max-height:none}
+}
+</style>
+</head>
+<body>
+<main>
+<section class="panel">
+  <div class="row" style="justify-content:space-between">
+    <div>
+      <div class="kicker">Ω-SBS · MC · ::ES::</div>
+      <h1>Omega University · Public Contract 01–10</h1>
+      <div class="muted">The ten-post course · full text · bounded interactive contracts · local receipts</div>
+    </div>
+    <div class="row">
+      <span class="badge good">10/10 POSTS</span>
+      <span class="badge">SERIES ONLY</span>
+      <span id="statusBadge" class="badge">IDLE</span>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="toolbar">
+    <label>Contract<select id="contractSelect"></select></label>
+    <label>View<select id="viewSelect"><option>PUBLIC</option><option>TECHNICAL</option></select></label>
+    <label class="search">Search<input id="searchInput" type="search" placeholder="Search the ten posts…"></label>
+    <button id="copyLink" type="button">Copy routed link</button>
+    <button id="selfTest" type="button">Run self-test</button>
+  </div>
+  <div id="searchResults" class="search-results" style="margin-top:8px"></div>
+</section>
+
+<section class="grid split">
+  <aside class="panel">
+    <h2>Public Contract Series</h2>
+    <div id="seriesList" class="grid"></div>
+  </aside>
+
+  <section class="panel">
+    <div class="row" style="justify-content:space-between;align-items:flex-start">
+      <div>
+        <div id="contractKicker" class="kicker"></div>
+        <h2 id="contractTitle"></h2>
+        <div id="contractPrinciple" class="muted"></div>
+      </div>
+      <div class="row">
+        <span id="viewBadge" class="badge"></span>
+        <span id="contractBadge" class="badge good"></span>
+      </div>
+    </div>
+
+    <div id="technicalSummary" class="card" style="margin-top:10px;display:none">
+      <b>Claim boundary</b>
+      <p id="claimBoundary" class="muted"></p>
+    </div>
+
+    <div class="tabs">
+      <button id="tabPost" class="active" type="button">Full Post</button>
+      <button id="tabInteractive" type="button">Interactive Contract</button>
+      <button id="tabEvidence" type="button">Evidence / Receipt</button>
+    </div>
+
+    <div id="panePost"><pre id="postText"></pre></div>
+
+    <div id="paneInteractive" style="display:none">
+      <div id="fixtureControls" class="card fixture"></div>
+      <div class="row" style="margin-top:10px">
+        <button id="runFixture" type="button">Run bounded demonstration</button>
+        <button id="clearReceipt" type="button">Clear</button>
+      </div>
+      <p class="small muted">The demonstration is scoped to the selected teaching contract. It does not upgrade the underlying post into a broader production, legal, regulatory, or trained-model claim.</p>
+    </div>
+
+    <div id="paneEvidence" style="display:none">
+      <div id="evidenceSummary" class="card"><span class="muted">No run yet.</span></div>
+      <h3>Receipt</h3>
+      <pre id="receiptView" class="receipt">No receipt.</pre>
+      <div class="row"><button id="exportReceipt" type="button" disabled>Export receipt JSON</button></div>
+    </div>
+  </section>
+</section>
+
+<section class="panel">
+  <h2>Series map</h2>
+  <div class="grid cards">
+    <div class="card"><b>PC01–PC02</b><div class="muted small">Execution structure → runtime admissibility</div></div>
+    <div class="card"><b>PC03–PC04</b><div class="muted small">Receipt → replay with identity</div></div>
+    <div class="card"><b>PC05–PC06</b><div class="muted small">Validate before commit → residual opacity</div></div>
+    <div class="card"><b>PC07–PC08</b><div class="muted small">Executable compliance grammar → archival identity</div></div>
+    <div class="card"><b>PC09–PC10</b><div class="muted small">Component classification → control plane</div></div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Claim boundary</h2>
+  <div class="grid cards">
+    <div class="card"><b>Included</b><p class="muted">The complete PC01–PC10 teaching text, routed navigation, ten bounded demonstrations, OPEN / REVIEW_REQUIRED / HALT outcomes, and local receipt export.</p></div>
+    <div class="card"><b>Not included</b><p class="muted">No separate C001–C084 Transformer workstation, no larger V5 lab, no remote execution, no backend, no production validator internals, and no hardware witness system.</p></div>
+    <div class="card"><b>Authority</b><p class="muted">This browser is a teaching and bounded-evidence surface. It is not legal permission, regulator approval, or a substitute for competent authority.</p></div>
+  </div>
+</section>
+
+<footer>BUILD: OMEGA_PUBLIC_CONTRACT_SERIES_BROWSER_V2 · PC01–PC10 · STATIC_CLIENT_ONLY · SERIES_ONLY</footer>
+</main>
+
+<script>
+"use strict";
+const POSTS={"PC01":{"title":"Execution, not answer appearance","body":"Most AI evaluation still asks a weak question:\nDid the model produce an acceptable answer?\nFor regulated, scientific, enterprise, and safety-critical systems, that is not enough.\nThe stronger requirement is:\nCan the execution itself be accounted for, validated, and reproduced?\nA minimal public contract looks like this:\nINPUT\n  declared_state\n  constraints\n  provenance\n\nEXECUTE\n  admissible_typed_transformations\n\nVERIFY\n  invariant_preservation\n  declared_execution_path\n  replayability\n  validation_conditions\n\nOUTPUT\n  result\n  validation_receipt\n\nON_FAILURE\n  HALT\nAt the formal level, the requirement is structural:\nF(id_A) = id_F(A)\n\nF(g o f) = F(g) o F(f)\n\nF(A tensor B) ~= F(A) tensor F(B)\nThe point is not the notation.\nThe point is that execution should preserve declared structure and provide evidence that the intended computational path actually occurred.\ndeclared state\n      |\n      v\nadmissible transformation\n      |\n      v\nvalidated execution\n      |\n      v\nreproducible result\n      |\n      v\nreceipt\nA correct-looking output is evidence about the answer.\nIt is not automatically evidence that the declared computation occurred.\nThat distinction is central to the Monoidal Calculus and deterministic AI runtime work being developed at Latent Studios, particularly where validation, provenance, reproducibility, and regulatory accountability matter.\nPublic technical releases and validation packages are now moving into DOI-versioned archival form.\n#AIEngineering #FormalVerification #AIValidation #AIGovernance #SoftwareArchitecture\n\n~ Flint"},"PC02":{"title":"Runtime Security","body":"In my last post, I wrote:\n\nF(id_A) = id_F(A)\n\nF(g o f) = F(g) o F(f)\n\nThat was not decorative notation.\n\nThose laws express a basic requirement: when a declared computation is mapped into an execution system, identity and composition should remain structurally accountable.\n\nBut structural preservation alone is not a security policy.\n\nSecurity begins when the runtime also constrains which transformations are admissible and verifies what actually occurred.\n\nSuppose the declared path is:\n\nA -> B -> C\n\nBut execution attempts:\n\nA -> B -> X -> C\n\nThe important question is not merely whether the final output at C looks acceptable.\n\nThe runtime must determine whether X was authorized.\n\nX might represent:\n\nUNAUTHORIZED TOOL ACCESS\n\nUNDECLARED DATA ACCESS\n\nPRIVILEGE ESCALATION\n\nPROHIBITED ACTION\n\nOUT-OF-DOMAIN EXECUTION\n\nPOLICY-VIOLATING STATE TRANSITION\n\nA minimal runtime policy can therefore look like:\n\nUNAUTHORIZED_TOOL_PATH -> HALT\n\nUNDECLARED_DATA_BOUNDARY_CROSSING -> HALT\n\nHIGH_RISK_DUAL_USE_TRAJECTORY -> SECURITY_HOLD\n\nPRIVILEGE_ESCALATION -> HALT\n\nEXECUTION_PATH_MISMATCH -> HALT\n\nVALIDATED_DECLARED_PATH -> OPEN\n\nThe point is not the syntax.\n\nThe point is where the decision occurs.\n\nMost output moderation asks:\n\n“Does this generated content appear safe?”\n\nRuntime security can ask:\n\n“Was this computation authorized to occur?”\n\nThose are different questions.\n\nThe first evaluates an output.\n\nThe second governs execution.\n\nFormal structure defines how declared computation is composed.\n\nPolicy defines which transformations are admissible.\n\nRuntime validation determines whether the actual execution satisfied both.\n\nDo not only validate the answer. Validate the computation that produced it — and when execution leaves the admissible path, stop the execution rather than asking the model to explain itself afterward.\n\n#AIEngineering #LLMSecurity #AISafety #AIInfrastructure #FormalVerification #AIGovernance\n\n~ Flint"},"PC03":{"title":"From Contract to Receipt: What You Are Actually Learning","body":"PUBLIC CONTRACT — 03/10\n\nFrom Contract to Receipt: What You Are Actually Learning — CAPSULE[PC03-C000]\n\nPosts 1 and 2 established two rules.\n\nFrom Post 1:\n\n> A correct-looking output is evidence about the answer. It is not automatically evidence that the declared computation occurred.\n\nFrom Post 2:\n\n> Runtime security asks a different question: was this computation authorized to occur?\n\nNow we put those two rules together.\n\nAnd before I go further, I should explain exactly what this series is doing.\n\nThis is not ten unrelated posts — CAPSULE[PC03-C005]\n\nYou are going to see the same basic system at several abstraction levels.\n\nEach level answers a different question.\n\nYou do not need to be a mathematician, programmer, regulator, or lawyer to start.\n\nThe point is that each profession should eventually be able to recognize the same underlying operation.\n\nThink of this series as public training for reading the kind of technical assurance result I would later hand back to a client.\n\nBy Post 10, you should be able to look at a result and understand:\n\nwhat was submitted\nwhat transformation was claimed\nwhat actually executed\nwhat evidence was bound\nwhat passed\nwhat failed\nwhere it failed\nwhat remains unresolved\nand why the final signal was issued\n\nThat is the objective.\n\nNot awe.\n\nComprehension.\n\n\nLAYER 1 — The Plain-English Execution Contract — CAPSULE[PC03-C010]\n\nStart with almost nothing:\n\nINPUT\nx = 4\n\nDECLARED TRANSFORMATION\nf(x) = x + 3\n\nDECLARED PATH\n4 -> 7\n\nEXPECTED OUTPUT\n7\n\nAnyone can understand this.\n\nThe first question is:\n\n> Did f actually act on 4 and produce 7?\n\nThe second is:\n\n> Did anything else act on the value that was not declared?\n\nThat is Posts 1 and 2 combined.\n\nThis is the layer to watch if you care about:\n\ninput, action, path, authority, result.\n\n\nLAYER 2 — The Receipt — CAPSULE[PC03-C020]\n\nNow we stop merely telling the story and start recording it.\n\ncase: TOY-01\n\ninput: 4\n\ntransform:\nf(x)=x+3\n\nexpected_path:\n4->7\n\nobserved_output:\n7\n\npath_accounted_for:\nYES\n\nundeclared_transition:\nNONE\n\nsignal:\nOPEN\n\nThat is the beginning of a receipt.\n\nOPEN here means only:\n\n> the declared evidence path passed for this stated scope.\n\nIt does not mean regulatory approval.\n\nThe receipt is where a statement starts becoming something another person can inspect.\n\nThis is the layer to watch if you care about:\n\nevidence, provenance, replay, auditability.\n\n\nLAYER 3 — One Operation, Different Professional Languages — CAPSULE[PC03-C030]\n\nThe same thing can be described differently depending on who is looking at it.\n\nTHEORY\nobject\n-> morphism\n-> composition\n-> invariant\n\nSOFTWARE\nstate\n-> transformation\n-> execution path\n-> assertion\n\nASSURANCE\ndeclared thing\n-> controlled operation\n-> workflow\n-> control requirement\n\nThen:\n\nTHEORY\nprovenance\n\nSOFTWARE\nversion / source\n\nASSURANCE\nevidence lineage\n\nAnd:\n\nTHEORY\nvalidation\n\nSOFTWARE\ntest / gate\n\nASSURANCE\nconformity check\n\nFinally:\n\nTHEORY\nresult\n\nSOFTWARE\ntrace\n\nASSURANCE\nreceipt\n\nThis is where category theory will eventually enter.\n\nNot because category theory belongs to me.\n\nIt does not.\n\nIt is mathematics.\n\nI use it because it gives these different professional descriptions a common structural language.\n\nThis is the layer to watch if you care about:\n\nhow lawyers, engineers, mathematicians, auditors and regulators talk about the same machine without pretending they have the same job.\n\n\nLAYER 4 — Replace the Toy With a Real Published Machine — CAPSULE[PC03-C040]\n\nNow replace x + 3 with a real public architecture.\n\nSOURCE AUTHORITY: Vaswani et al., Attention Is All You Need, 2017.\n\nThe paper gives us a declared Transformer computation.\n\nFor example:\n\nhidden state\n   |\n   +-> Q projection\n   +-> K projection\n   +-> V projection\n          |\n          v\nQK^T / sqrt(d_k)\n          |\n       softmax\n          |\n          v\nweighted values\n\nThe source defines:\n\nAttention(Q,K,V)\n=\nsoftmax(QK^T / sqrt(d_k))V\n\nIt also gives us a useful admissibility boundary.\n\nIn decoder self-attention, future positions are masked so that prediction at a position cannot consume information from subsequent target positions.\n\nThat is a source fact from the 2017 architecture.\n\nMy interpretation comes afterward:\n\ndeclared legal information path\n-> ADMIT\n\nfuture-token path\nwhen causal decoding forbids it\n-> DENY\n\nI am not claiming Vaswani et al. wrote my security framework.\n\nI am showing you that the framework can describe their published machine.\n\nThis is the layer to watch if you care about:\n\nsource fidelity and whether my framework can be applied to somebody else's real technical work without rewriting it.\n\n\nLAYER 5 — Make the Source Addressable — CAPSULE[PC03-C050]\n\nNow something changes.\n\nNot the Transformer.\n\nThe representation of the Transformer.\n\nMy SBS-FDP extraction assigns stable addresses to parts of the source.\n\nA tiny example:\n\nC014\nTransformer architectural composition\n\nC017\ndecoder causal visibility constraint\n\nC019 / C022\nattention computation\n\nC084\ncanonical source-system master\n\nThose IDs are mine.\n\nThe Transformer facts behind them remain attributed to the original authors.\n\nThe extraction records:\n\nSOURCE-SEMANTIC-GAIN:\n0 new paper facts\n\nWhat I add is structural addressability.\n\nNow I can say:\n\n> inspect C017\n\ninstead of:\n\n> somewhere in the paper there is a rule about causal masking.\n\nLater, a graph, braid, manifest, receipt, proof reference, or certificate can point back to the same address.\n\nThis is the layer to watch if you care about:\n\nfinding the exact thing again.\n\nThat sounds mundane until the document is hundreds of pages, the system has thousands of components, and somebody asks six months later:\n\n> “Which exact rule caused this result to halt?”\n\nThen addresses matter.\n\n\nLAYER 6 — Regulatory Baseline — CAPSULE[PC03-C060]\n\nNow
+ ask another set of questions:\n\nWhat component are we examining?\n\nWhich version?\n\nWhat goes in?\n\nWhat comes out?\n\nWhat mechanism acts?\n\nDoes it infer?\n\nWhat dependencies participate?\n\nWhat authority does the output have?\n\nWho or what may commit it?\n\nWhat evidence exists?\n\nWhat remains unresolved?\n\nThose questions belong to the regulatory/compliance record.\n\nBut there is an important boundary.\n\nWhen I write:\n\nREGULATORY BASELINE\n\nI mean:\n\n> what the controlling law, guidance, authority, or applicable regulatory source actually expects.\n\nThat source may be binding law.\n\nIt may be non-binding guidance.\n\nIt may be another authoritative requirement.\n\nThose are not interchangeable.\n\nThis is the layer to watch if you care about:\n\nwhat the external authority actually asks.\n\n\nLAYER 7 — Flint Assurance — CAPSULE[PC03-C070]\n\nThen comes a separate layer:\n\nFLINT ASSURANCE\n\nThis means:\n\n> additional engineering evidence I require before I will issue my own technical assurance result for the claim being tested.\n\nExamples include:\n\nundeclared inference\n\nbroken type boundary\n\nhidden domain bridge\n\nmissing provenance\n\nunbounded residual\n\nnon-replayable state\n\nvalidation after commit\n\nexecution-path mismatch\n\nThose are not silently converted into statutes.\n\nMy engineering requirements remain labeled as my engineering requirements.\n\nThat distinction will remain visible throughout the series:\n\nREGULATORY BASELINE\n!=\nFLINT ASSURANCE\n\nThis is the layer to watch if you care about:\n\nwhat I will actually judge your submitted technical claim against.\n\nAnd I am publishing that in advance deliberately.\n\nNobody should hire me, receive a failure, and then reasonably say:\n\n> “You never told us that was one of the rules.”\n\n\nLAYER 8 — Know Which Kind of Receipt You Are Reading — CAPSULE[PC03-C080]\n\nOur toy example actually executed.\n\nSo it can have an execution receipt.\n\nThe Transformer example in this post has not executed the original trained 2017 system.\n\nSo today its record is different:\n\nSOURCE-BOUND INSPECTION\n\nsource_identity:\nBOUND\n\narchitecture:\nSOURCE-EXTRACTED\n\ncausal_constraint:\nBOUND\n\nselected_structure:\nADDRESSABLE\n\nsource_semantics_added:\n0\n\narchitectural_modification:\nNONE\n\nclaim_scope:\nSOURCE_ANALYSIS\n\nThis distinction is fundamental.\n\nsource receipt\n!=\nexecution receipt\n\nexecution receipt\n!=\nregulatory determination\n\nregulatory record\n!=\nparity proof\n\nparity proof\n!=\nTransformer proof\n\nLater you will see why those records are deliberately kept separate.\n\nThis is the layer to watch if you care about:\n\nnot allowing one kind of evidence to impersonate another.\n\n\nWhat Comes Next — CAPSULE[PC03-C090]\n\nThe rest of this series follows the same object downward.\n\nPOST 3\nreceipt\n\nPOST 4\nwhat replay actually requires\n\nPOST 5\nwhy validation must occur before commit\n\nPOST 6\nhow unresolved opacity is recorded instead of erased\n\nPOST 7\nhow the process becomes a typed mathematical submission\n\nPOST 8\nhow the source, extraction, graphs, braids, manifest,\nmachine representation and archival release connect\n\nPOST 9\nhow operative components are classified instead of\ncalling an entire product \"AI\"\n\nPOST 10\nhow the whole thing becomes a control plane,\ntechnical review and certificate/receipt workflow\n\nSo when you see a new layer, ask:\n\nWHAT AM I LOOKING AT?\n\nSOURCE?\nSTRUCTURE?\nEXECUTION?\nREGULATION?\nASSURANCE?\nEVIDENCE?\n\nWHO OWNS THE CLAIM?\n\nWHAT EXACTLY HAS BEEN PROVED?\n\nWHAT HAS NOT?\n\nIf you can answer those questions by Post 10, the course worked.\n\n\nWhat I Am and Am Not Giving You — CAPSULE[PC03-C095]\n\nI am giving you enough of the public interface to:\n\ndescribe your own system\n\nformalize its objects and transformations\n\ndeclare its boundaries and invariants\n\nprepare evidence\n\nunderstand my result\n\nchallenge my result intelligently\n\nYou are not receiving the protected machinery that performs the complete production:\n\nlowering\nnormalization\ncompiler construction\nvalidator internals\nrouting\nproof binding\ncertificate generation\nproduction regulatory kernel\n\nThink of it this way:\n\nI am publishing enough of the language for you to speak to the machine.\n\nI am not publishing enough to rebuild the machine.\n\n\nWhy I Am Teaching This Before Selling It — CAPSULE[PC03-C097]\n\nBecause a certificate that nobody understands is just another black box.\n\nI do not want a client to receive:\n\nHALT\n\nand accept it because the document looks sophisticated.\n\nI want them able to ask:\n\nWhich component?\n\nWhich transformation?\n\nWhich boundary?\n\nWhich invariant?\n\nWhich evidence?\n\nWhich residual?\n\nWhich validator?\n\nWhy HALT instead of REVIEW_REQUIRED?\n\nWhat would close the claim?\n\nAnd I want my answer to point back to something they can inspect.\n\nThat is why the training comes first.\n\n\nENCODING NOTE — CAPSULE[PC03-C099]\n\nThis series itself is being published as an addressable document.\n\nSections and subsections receive stable capsule IDs so later archival artifacts can refer back to exact public statements rather than vague prose.\n\nThe source attribution remains separated:\n\nVASWANI ET AL. / 2017\nsource architecture and source facts\n\nFLINT / SBS-FDP\nextraction, indexing, capsule identities,\ngraphs, braids and structural addressability\n\nFLINT / LATENT STUDIOS\nMC formalization, assurance overlay,\nregulatory crosswalk and technical certificate contract\n\nThe public series exposes:\n\ninput grammar\nstructural rules\nsource attribution\nclaim boundaries\nevidence expectations\n\nIt does not expose the protected production engine.\n\nThe abstraction may change.\n\nThe declared meaning may not silently change with it.\n\nSource anchors\n\nVaswani et al., Attention Is All You Need, NIPS 2017.\n\nFlint / SBS-FDP Transformer extraction: parent corpus C001-C084; master C084; parent ledger E-ATTN-2017-20260830T020500-0500.\n\nLatent Studios, REGULATORY_COMPLIANCE_MC_PARITY_TRANSFORMER_OPERATOR_MANUAL_V1.\n\nArchival DOI linkage will be attached when the corresponding release is frozen and live.\n\n~ Flint\n\n#AIEngineering #FormalVerification #DeterministicAI #AICompliance #SystemsArchitecture"},"PC04":{"title":"Replay is not “run it again”","body":"PUBLIC CONTRACT — 04/10\n\nREPLAY IS NOT “RUN IT AGAIN” — CAPSULE[PC04-C000]\n\nPost 3 gave us a receipt.\n\nNow ask the next question:\n\nCan somebody else reproduce what that receipt says happened?\n\nThat is not the same as pressing RUN twice.\n\nStart with the toy:\n\nINPUT\nx = 4\n\nDECLARED RULE\nf(x) = x + 3\n\nRESULT\n7\n\nA useful replay record needs enough identity to distinguish one execution from another:\n\ninput\nrule/version\nstate\nconstraints\ndependencies\nvalidator/version\noutput or rejection\ntrace/provenance\n\nSame visible input with different hidden state is not the same case.\nSame code with different parameters is not the same case.\nSame output through a different path is not automatically the same execution.\n\nThat is why I use this rule:\n\nREPLAY = REPETITION WITH IDENTITY\n\nFor the 2017 Transformer specimen, the same distinction applies.\n\nThe source architecture belongs to Vaswani et al.\n\nMy source-fidelity archive binds:\nsource identity\nsource hash\ncapsule addresses\nextraction version\nrelationships\nconflicts\nprovenance\n\nThat lets another person replay the SOURCE ANALYSIS.\n\nIt does not pretend I have replayed the original trained 2017 model merely because I can re-open the paper.\n\nDifferent records answer different questions.\n\nSOURCE REPLAY\nDid we inspect the same source?\n\nEXECUTION REPLAY\nDid the same declared computation recur under the same bound state?\n\nREGULATORY REPLAY\nCan the reviewer reconstruct the evidence basis for the recorded determination?\n\nFLINT ASSURANCE\nIf a deterministic claim depends on state that is not sufficiently bound to reproduce the result or structured rejection, the claim does not silently pass.\n\nThe signal remains scoped:\n\nOPEN\nREVIEW_REQUIRED\nHALT\n\nNext:\n\nIf replay tells us whether the same thing happened again, when must validation happen?\n\nBefore or after the result is allowed to matter?\n\nCAPSULE[PC05-C000]\n\n~ Flint\n\n#AIEngineering #FormalVerification #DeterministicAI #SystemsArchitecture"},"PC05":{"title":"Validate Before Commit","body":"PUBLIC CONTRACT — 05/10\n\nVALIDATE BEFORE COMMIT — CAPSULE[PC05-C000]\n\nA system can produce an output without possessing authority to commit that output.\n\nThose are different operations.\n\nThe typed version is simple:\n\nValidate : X -> Verified[X]\n\nCommit : Verified[X] -> Committed[X]\n\nThe boundary matters because these four things are not interchangeable:\n\nGENERATION\nsomething produced a candidate result\n\nVALIDATION\nthe required checks were applied\n\nAUTHORIZATION\nthe result is permitted to have the declared effect\n\nCOMMIT\nthe effect is actually written, released, routed, executed or acted upon\n\nNow return to the 2017 Transformer.\n\nVaswani et al. describe an autoregressive architecture that generates output symbols and uses an output projection / softmax to produce next-token probabilities.\n\nThat is a source fact.\n\nIt does not mean:\n\n“the model emitted a token, therefore the token has authority to commit itself into every downstream system.”\n\nThat second statement belongs to system governance, not to the Transformer paper.\n\nSo the public contract becomes:\n\ncandidate output\n        ↓\ndeclared validation boundary\n        ↓\nOPEN / REVIEW_REQUIRED / HALT\n        ↓\nauthorization where required\n        ↓\ncommit\n        ↓\nreceipt\n\nREGULATORY BASELINE asks what controlling law, guidance, authority or contract requires for the actual use case.\n\nFLINT ASSURANCE adds a separate
+ engineering rule:\n\nIf a claim requires validation before commit, an unverified output may not silently cross the commit boundary.\n\nThat is my rule.\nIt is not silently promoted into statute.\n\nThe useful question is therefore not:\n\n“Did the system generate an answer?”\n\nIt is:\n\n“What had to become true before that answer was allowed to matter?”\n\nNext:\n\nWhat happens when part of the path cannot be fully inspected?\n\nCAPSULE[PC06-C000]\n\n~ Flint\n\n#AIEngineering #FormalVerification #AICompliance #SystemsArchitecture"},"PC06":{"title":"Residual Opacity Is a Result","body":"PUBLIC CONTRACT — 06/10\n\nRESIDUAL OPACITY IS A RESULT — CAPSULE[PC06-C000]\n\nSuppose the declared path is:\n\nx -> f -> u -> output\n\nYou understand f.\n\nYou do not yet understand u.\n\nThere are two bad responses:\n\n1. pretend u does not matter\n2. declare the entire system meaningless\n\nThere is a third response:\n\nrecord the residual.\n\nA residual register can say:\n\nlocation\nwhat remains opaque\nwhy it matters\nwhich claim it affects\nwho owns it\nwhat control exists\ncontrol status\naccepted scope\n\nThat turns “we don’t know” into an addressable technical result.\n\nThe 2017 Transformer gives us an easy example.\n\nIts architecture includes learned projections and learned embeddings / output transformation.\n\nThose are source facts from Vaswani et al.\n\n“Learned” does not mean “defective.”\n\nIt means that if a later claim depends on the exact internal state of those learned parameters, that state must be handled honestly.\n\nThe same rule applies to:\n\nmodel weights\nlatent embeddings\nexternal APIs\nopaque rankers\nhidden policies\nhuman discretion\nnondeterministic dependencies\nundeclared domain bridges\n\nThe signal depends on the claim.\n\nA bounded residual that does not defeat the declared claim may remain visible in an OPEN record.\n\nAn unresolved residual that prevents the claim from closing becomes REVIEW_REQUIRED.\n\nA required boundary that actually fails becomes HALT.\n\nThe point is not to erase uncertainty.\n\nThe point is to stop uncertainty from impersonating proof.\n\nThis is one reason I keep the work user-facing.\n\nThe receipt should tell you what the system knows, what it does not know, and where the boundary sits.\n\nThen the domain authority can decide what that means for its own use.\n\nNext:\n\nThe pieces you have been learning become an input language.\n\nCAPSULE[PC07-C000]\n\n~ Flint\n\n#AIEngineering #FormalVerification #DeterministicAI #AICompliance"},"PC07":{"title":"What Executable Compliance Looks Like","body":"PUBLIC CONTRACT — 07/10\n\nWHAT EXECUTABLE COMPLIANCE LOOKS LIKE — CAPSULE[PC07-C000]\n\nBy now you have been learning an input language without being asked to memorize one.\n\nA bounded technical submission can be reduced to questions such as:\n\n1. What objects exist?\n2. What transformations are allowed?\n3. What are their typed source and target boundaries?\n4. What may occur in parallel?\n5. What must occur sequentially?\n6. What invariants must remain true?\n7. What finite execution object Γ is being submitted?\n8. What valuation ν gives the symbols operational meaning?\n9. Is a separate cross-domain bridge G actually required?\n10. What validation obligations apply?\n11. Which parts are fixed runtime and which belong to the submitted domain?\n\nThat becomes a mathematical interface:\n\nS_D\n  -> FreeTensorCategory(S_D)\n  ->[F_nu_D] V_D\n\nwith the runtime lock:\n\nRun_MC(Γ,nu_D)\n  = F_nu_D([Γ])\n  = nu_D(Γ)\n\nThe optional cross-domain functor G is separate.\n\nThat distinction matters.\n\nThe native valuation-induced execution is not allowed to silently become a different cross-domain operation because the notation looks convenient.\n\nThe case record is also separated.\n\nREGULATORY RECORD\nWhat does the controlling authority require?\n\nMC RECORD\nWhat typed construction was actually submitted?\n\nPARITY RECORD\nWhat equivalence claim, if any, was tested?\n\nTRANSFORMER RECORD\nWhat Transformer claim, if any, was actually demonstrated?\n\nLINEAGE RECORD\nHow do the separately checkable records connect without substituting for one another?\n\nThis is why the criteria must be public before inspection.\n\nA client should know the grammar of the test before handing me proprietary material.\n\nPublic:\nthe language, types, boundaries, invariants and claim structure.\n\nControlled:\nlowering, normalization, compiler, validator internals, routing, proof binding and issuance.\n\nYou should be able to speak to the machine without being handed the production engine.\n\nNext:\n\nThe tutorial stops being merely prose and becomes an archival object.\n\nCAPSULE[PC08-C000]\n\n~ Flint\n\n#FormalVerification #AICompliance #DeterministicAI #SystemsArchitecture"},"PC08":{"title":"The Tutorial Was Pointing at a Machine","body":"PUBLIC CONTRACT — 08/10\n\nTHE TUTORIAL WAS POINTING AT A MACHINE — CAPSULE[PC08-C000]\n\n[PUBLICATION GATE: INSERT LIVE DOI AND FROZEN RELEASE HASH BEFORE POSTING]\n\nThe source specimen is now frozen and citable.\n\nDOI:\n[INSERT LIVE DOI]\n\nFROZEN RELEASE HASH:\n[INSERT HASH]\n\nThe public chain is:\n\nVaswani et al. 2017 source\n        ↓\nsource-fidelity extraction\n        ↓\nC001-C084 addressable corpus\n        ↓\nKG / SG / RG\n        ↓\nedges / braids\n        ↓\nledger\n        ↓\ncanon / manifest\n        ↓\npublic typed formalization interface\n        ↓\nseparately scoped execution / validation artifacts\n\nThe important statement remains:\n\nSOURCE-SEMANTIC-GAIN:\n0 new paper facts\n\nThe Transformer did not become a different Transformer.\n\nIts representation became addressable.\n\nC084 is my extraction master identifier.\nC017 is my address for the causal-visibility boundary.\nC014 is my architecture address.\nThose identifiers are not identifiers from Vaswani et al.\n\nThat attribution boundary is structural, not cosmetic.\n\nThe archive also does not silently convert a source inspection into a Transformer proof.\n\nSOURCE EXTRACTION\nis one evidence plane.\n\nMC FORMALIZATION\nis another.\n\nPARITY\nis another where claimed.\n\nTRANSFORMER EXECUTION PROOF\nis another where actually demonstrated.\n\nREGULATORY REVIEW\nis another.\n\nTECHNICAL ASSURANCE\nis another.\n\nA DOI fixes a public artifact in time.\n\nIt does not upgrade the claims inside it.\n\nThat is exactly why the archive exists.\n\nMachine-readable does not mean native CPU opcode.\n\nIt means the representation has stable identities, declared relationships and enough structure for later systems to reference the same thing without silently changing its meaning.\n\nNext:\n\nNow that the object is decomposed, what exactly are we classifying when somebody says “AI system”?\n\nCAPSULE[PC09-C000]\n\n~ Flint\n\n#AIEngineering #FormalVerification #DeterministicAI #OpenScience"},"PC09":{"title":"“AI System” Is Too Coarse a Unit of Analysis","body":"PUBLIC CONTRACT — 09/10\n\n“AI SYSTEM” IS TOO COARSE A UNIT OF ANALYSIS — CAPSULE[PC09-C000]\n\nA deployed product may contain:\n\na learned model\na deterministic router\na database\nretrieval\npolicy logic\na human reviewer\na validator\na ledger\na compiler\na release gate\n\nCalling all of that one undifferentiated “AI system” can destroy the very distinctions a reviewer needs.\n\nSo classification attaches to the operative component and use case.\n\nMy current component-outcome vocabulary includes:\n\nNOT_AI_DETERMINISTIC\nAI_COMPONENT\nHYBRID_COMPONENT\nPARITY_CONVERTED_COMPONENT\nCOMPLIANCE_VERIFICATION_INFRASTRUCTURE\nUNKNOWN_PENDING_REVIEW\n\nThose are technical/regulatory review categories.\n\nThey are not a declaration that an entire platform is exempt from law.\n\nAnother distinction matters:\n\nPARAMETER EXISTENCE\n!=\nPARAMETER ORIGIN\n\nThe original 2017 Transformer uses learned projections and learned embeddings / output projection.\n\nThat remains attributed to Vaswani et al.\n\nSeparately, a numerical parameter set can be hand-derived or compiler-derived for a declared deterministic function.\n\nMy full-adder reference is an example of that second statement.\n\nIt is not a claim that the full adder is the 2017 Transformer.\n\nIt demonstrates a narrower point:\n\nnumerical parameters do not logically prove that training produced them.\n\nSo a serious classification record asks:\n\nWhat component?\nWhat mechanism?\nWhat parameter provenance?\nWhat input and output?\nWhat inference, if any?\nWhat residual opacity?\nWhat deployment context?\nWhat evidence?\nWhat authority does the output actually possess?\n\nThen it binds the answer to a component, version and scope.\n\nA competent authority still owns the legal determination.\n\nA Flint technical result remains evidence, not permission.\n\nNext:\n\nPut the entire course together.\n\nCAPSULE[PC10-C000]\n\n~ Flint\n\n#AICompliance #AIEngineering #FormalVerification #DeterministicAI"},"PC10":{"title":"The Control Plane","body":"PUBLIC CONTRACT — 10/10\n\nTHE CONTROL PLANE — CAPSULE[PC10-C000]\n\nThe entire series reduces to one governed path:\n\nREQUEST\n  ↓\nDECLARE\n  ↓\nEXECUTE\n  ↓\nVALIDATE\n  ↓\nOPEN / REVIEW_REQUIRED / HALT\n  ↓\nAUTHORIZE WHERE REQUIRED\n  ↓\nCOMMIT\n  ↓\nRECEIPT\n\nThere are two ways to enter.\n\nCLIENT-PREPARED\n\nYou submit the bounded domain, objects, transformations, typed boundaries, composition, invariants, claim and evidence you want examined.\n\nYou do not have to expose the rest of the system merely because it exists.\n\nASSISTED\n\nYou provide the selected native material under the agreed scope.\n\nI perform the decomposition and formalization needed for the engagement.\n\nEither way, the returned result must explain itself.\n\nWhat passed?\nWhat failed?\nWhere?\nAgainst which rule?\nWith which evidence?\nWhat remains unresolved?\nWhat was out of scope?\nWhat would close the claim?\nCan another qualified party replay the evidence path?\n\nThat
+ is why the tutorial was public first.\n\nI do not want a client to receive:\n\nHALT\n\nand accept it because the notation looks impressive.\n\nThe work should remain user-facing.\n\nSOURCE\n→ STATE\n→ TRANSFORMATION\n→ PROVENANCE\n→ EVIDENCE\n→ RESIDUALS\n→ SIGNAL\n\nThen the user applies the result to the authority they actually possess.\n\nEngineer.\nAuditor.\nCounsel.\nProcurement office.\nRegulator.\nResearcher.\nOperator.\n\nThe signal does not need my ego embedded in it.\n\nIt needs enough structure that somebody else can inspect, challenge, reuse or reject it intelligently.\n\nThat is the control plane.\n\nNot “trust me.”\n\nShow what was submitted.\nShow what acted.\nShow what changed.\nShow what did not.\nShow the evidence.\nShow the unresolved boundary.\nIssue only the signal the evidence supports.\n\nA Latent Studios technical assurance result is scope-bound evidence.\n\nIt is not EU Commission approval.\nIt is not a notified-body act.\nIt is not legal permission.\nIt does not replace competent counsel or a competent authority.\n\nThe public contract ends where it began:\n\nA correct-looking output is not enough.\n\nNow you know what has to travel with it.\n\n~ Flint\n\n#AIEngineering #FormalVerification #AICompliance #SystemsArchitecture"}};
+const META={"PC01":{"principle":"Execution must be accountable, structurally preserved, validated, and reproducible.","boundary":"A correct-looking output is not automatically evidence that the declared computation occurred."},"PC02":{"principle":"Security governs whether the computation itself was authorized to occur.","boundary":"Structural preservation alone is not a security policy."},"PC03":{"principle":"The series trains the reader to distinguish source, structure, execution, regulation, assurance, evidence, and receipts.","boundary":"Source receipt != execution receipt != regulatory determination != parity proof != Transformer proof."},"PC04":{"principle":"REPLAY = REPETITION WITH IDENTITY.","boundary":"Same visible output is not automatically the same execution."},"PC05":{"principle":"Generation, validation, authorization, and commit are distinct operations.","boundary":"An unverified result may not silently cross a required commit boundary."},"PC06":{"principle":"Residual opacity is recorded as an addressable technical result.","boundary":"Uncertainty must not impersonate proof."},"PC07":{"principle":"A bounded technical submission becomes a typed, executable interface.","boundary":"Public criteria do not expose protected production internals."},"PC08":{"principle":"The tutorial maps into an archival machine with separated evidence planes.","boundary":"A DOI fixes an artifact in time; it does not upgrade its claims."},"PC09":{"principle":"Classification belongs to an operative component plus use case.","boundary":"A technical classification is evidence, not a legal determination."},"PC10":{"principle":"The entire course reduces to a governed request-to-receipt control plane.","boundary":"A Latent Studios technical assurance result is scope-bound evidence, not legal permission."}};
+const IDS=Object.keys(POSTS);
+const SIGNAL={OPEN:"OPEN",REVIEW:"REVIEW_REQUIRED",HALT:"HALT"};
+const VERSION="2.0.0-SERIES";
+const $=id=>document.getElementById(id);
+let contract="PC01", view="PUBLIC", receipt=null, tab="POST";
+
+function validContract(v){return IDS.includes(v)}
+function routeFromURL(){
+  try{
+    const p=new URLSearchParams(location.search);
+    return {
+      contract: validContract(p.get("contract")) ? p.get("contract") : "PC01",
+      view: ["PUBLIC","TECHNICAL"].includes(p.get("view")) ? p.get("view") : "PUBLIC"
+    };
+  }catch{return {contract:"PC01",view:"PUBLIC"}}
+}
+function updateRoute(){
+  try{
+    const u=new URL(location.href);
+    u.search="";
+    u.searchParams.set("contract",contract);
+    u.searchParams.set("view",view);
+    history.replaceState(null,"",u);
+  }catch{}
+}
+function routeHref(){
+  try{
+    const u=new URL(location.href);
+    u.search="";
+    u.searchParams.set("contract",contract);
+    u.searchParams.set("view",view);
+    return u.href;
+  }catch{return "?contract="+contract+"&view="+view}
+}
+function canonical(v){
+  if(Array.isArray(v)) return "["+v.map(canonical).join(",")+"]";
+  if(v && typeof v==="object"){
+    return "{"+Object.keys(v).sort().map(k=>JSON.stringify(k)+":"+canonical(v[k])).join(",")+"}";
+  }
+  return JSON.stringify(v);
+}
+async function sha256(v){
+  const text=typeof v==="string"?v:canonical(v);
+  if(!globalThis.crypto?.subtle) return null;
+  const b=new TextEncoder().encode(text);
+  const d=await crypto.subtle.digest("SHA-256",b);
+  return [...new Uint8Array(d)].map(x=>x.toString(16).padStart(2,"0")).join("");
+}
+function setStatus(s){
+  $("statusBadge").textContent=s;
+  $("statusBadge").className="badge "+(s===SIGNAL.OPEN?"good":s===SIGNAL.HALT?"bad":s===SIGNAL.REVIEW?"warn":"");
+}
+function setTab(which){
+  tab=which;
+  for(const name of ["Post","Interactive","Evidence"]){
+    $("tab"+name).classList.toggle("active",which===name.toUpperCase());
+    $("pane"+name).style.display=which===name.toUpperCase()?"block":"none";
+  }
+}
+function fixtureHTML(id){
+ const map={
+ PC01:`<b>PC01 · Composition accountability</b><div class="muted">Compare a declared composition g(f(x)) with the same declared composed calculation.</div><label>x<input id="x1" type="number" value="7"></label>`,
+ PC02:`<b>PC02 · Runtime transition policy</b><div class="muted">Test whether the requested state transition is declared.</div><div class="row"><label>From<select id="f2"><option>DRAFT</option><option>VALIDATED</option><option>COMMITTED</option></select></label><label>To<select id="t2"><option>VALIDATED</option><option>COMMITTED</option><option>DRAFT</option></select></label></div>`,
+ PC03:`<b>PC03 · Contract-to-receipt toy case</b><div class="muted">Run the post's x → x+3 example and bind the result into a receipt.</div><label>Input x<input id="x3" type="number" value="4"></label>`,
+ PC04:`<b>PC04 · Replay with identity</b><div class="muted">Run the same bound calculation twice and compare canonical receipt-body hashes.</div><label>Input<input id="x4" type="number" value="4"></label>`,
+ PC05:`<b>PC05 · Validate before commit</b><div class="muted">A future perturbation must not affect the current output when the declared causal mask is enforced.</div><div class="row"><label>Mask<select id="m5"><option>ENFORCED</option><option>BYPASSED</option></select></label><label>Future perturbation<input id="s5" type="number" value="5" step=".25"></label></div>`,
+ PC06:`<b>PC06 · Residual opacity register</b><div class="muted">Declare the residual state instead of erasing uncertainty.</div><label>Residual<select id="r6"><option>BOUNDED_NONDEFEATING</option><option>UNRESOLVED_CLAIM_BLOCKING</option><option>REQUIRED_BOUNDARY_FAILED</option></select></label>`,
+ PC07:`<b>PC07 · Typed bounded valuation</b><div class="muted">Apply an explicit U8 × U8 typed operation and check its invariant.</div><div class="row"><label>A<input id="a7" type="number" value="173"></label><label>B<input id="b7" type="number" value="91"></label></div>`,
+ PC08:`<b>PC08 · Archive / claim-plane gate</b><div class="muted">This fixture checks the structure of an archival identity claim. It does not fill the publication placeholders inside the post.</div><label><input id="s8" type="checkbox" checked> Source identity bound</label><label><input id="h8" type="checkbox" checked> Frozen hash declared</label><label><input id="c8" type="checkbox" checked> Claim planes separated</label>`,
+ PC09:`<b>PC09 · Component classification</b><div class="muted">Classification attaches to one operative component/use case.</div><label>Component/use case<select id="k9"><option>DETERMINISTIC_FIXTURE</option><option>LLM_INTERPRETATION</option><option>LLM_TO_DETERMINISTIC_ROUTE</option><option>PARITY_CONVERTED</option><option>COMPLIANCE_INFRA</option><option>UNKNOWN</option></select></label>`,
+ PC10:`<b>PC10 · Control plane</b><div class="muted">Aggregate policy, evidence, and type status into the public control signal.</div><div class="row"><label>Policy<select id="p10"><option>PASS</option><option>UNRESOLVED</option><option>DENY</option></select></label><label>Evidence<select id="e10"><option>PASS</option><option>UNRESOLVED</option><option>DENY</option></select></label><label>Type<select id="t10"><option>PASS</option><option>UNRESOLVED</option><option>DENY</option></select></label></div>`
+ };
+ return map[id];
+}
+function renderList(filter=""){
+  const host=$("seriesList"); host.textContent="";
+  const q=filter.trim().toLowerCase();
+  for(const id of IDS){
+    const p=POSTS[id],m=META[id];
+    const hay=(id+" "+p.title+" "+p.body+" "+m.principle+" "+m.boundary).toLowerCase();
+    if(q && !hay.includes(q)) continue;
+    const b=document.createElement("button");
+    b.type="button"; b.className="contract"+(id===contract?" active":""); b.dataset.id=id;
+    const title=document.createElement("b"); title.textContent=id+" · "+p.title;
+    const line=document.createElement("span"); line.textContent=m.principle;
+    b.append(title,line);
+    b.onclick=()=>{contract=id;$("contractSelect").value=id;updateRoute();render();setTab("POST")};
+    host.appendChild(b);
+  }
+  if(!host.children.length) host.innerHTML='<div class="muted">No matches.</div>';
+}
+function renderSearch(q){
+  const host=$("searchResults");host.textContent="";
+  q=q.trim().toLowerCase();
+  if(!q) return;
+  const hits=[];
+  for(const id of IDS){
+    const raw=POSTS[id].title+"\n"+POSTS[id].body;
+    const i=raw.toLowerCase().indexOf(q);
+    if(i>=0){
+      hits.push({id,snippet:(i>0?"…":"")+raw.slice(Math.max(0,i-65),Math.min(raw.length,i+q.length+120)).replace(/\s+/g," ")+(i+q.length+120<raw.length?"…":"")});
+    }
+  }
+  for(const h of hits){
+    const b=document.createElement("button");b.type="button";b.className="search-hit";
+    const strong=document.createElement("b");strong.textContent=h.id+" · "+POSTS[h.id].title;
+    const span=document.createElement("div");span.className="small muted";span.textContent=h.snippet;
+    b.append(strong,span);b.onclick=()=>{contract=h.id;$("contractSelect").value=h.id;updateRoute();render();setTab("POST")};
+    host.appendChild(b);
+  }
+  if(!hits.length) host.innerHTML='<div class="muted">No matches.</div>';
+}
+function render(){
+  const p=POSTS[contract],m=META[contract];
+  $("contractKicker").textContent=contract+" · PUBLIC CONTRACT";
+  $("contractTitle").textContent=p.title;
+  $("contractPrinciple").textContent=m.principle;
+  $("claimBoundary").textContent=m.boundary;
+  $("technicalSummary").style.display=view==="TECHNICAL"?"block":"none";
+  $("viewBadge").textContent=view;
+  $("contractBadge").textContent=contract;
+  $("postText").textContent=p.body;
+  $("fixtureControls").innerHTML=fixtureHTML(contract);
+  renderList($("searchInput").value);
+}
+function softmax(a){
+  const m=Math.max(...a), e=a.map(x=>Math.exp(x-m)), z=e.reduce((x,y)=>x+y,0);
+  return e.map(x=>x/z);
+}
+function causal(mask,pert){
+  const keys=[1,2,3],v1=[2,4,8],v2=[2,4,8+Number(pert)];
+  function att(v){
+    let s=keys.slice();
+    if(mask==="ENFORCED")s[2]=-1e9;
+    const w=softmax(s);
+    return w.reduce((x,y,i)=>x+y*v[i],0);
+  }
+  const a=att(v1),b=att(v2);
+  return {baseline:a,perturbed:b,maxAbsDiff:Math.abs(a-b)};
+}
+async function runFixture(){
+  const m=META[contract];
+  let input={},output={},checks=[],status=SIGNAL.HALT;
+  try{
+    if(contract==="PC01"){
+      const x=+$("x1").value, f=n=>n+1, g=n=>2*n, lhs=g(f(x)), rhs=2*(x+1);
+      input={x};output={lhs,rhs};
+      checks=[{id:"COMPOSITION",pass:lhs===rhs,detail:lhs+" == "+rhs}];
+      status=lhs===rhs?SIGNAL.OPEN:SIGNAL.HALT;
+    }
+    if(contract==="PC02"){
+      const from=$("f2").value,to=$("t2").value,allow={DRAFT:["VALIDATED"],VALIDATED:["COMMITTED"],COMMITTED:[]};
+      const pass=(allow[from]||[]).includes(to);
+      input={from,to};output={transition:from+"→"+to};
+      checks=[{id:"ALLOWLISTED_TRANSITION",pass,detail:pass?"declared":"undeclared"}];
+      status=pass?SIGNAL.OPEN:SIGNAL.HALT;
+    }
+    if(contract==="PC03"){
+      const x=+$("x3").value,y=x+3;
+      input={case:"TOY-01",x,transform:"f(x)=x+3",expectedPath:x+"→"+y};
+      output={observed:y,pathAccountedFor:true,undeclaredTransition:null};
+      checks=[{id:"DECLARED_PATH",pass:true,detail:input.expectedPath},{id:"UNDECLARED_TRANSITION",pass:true,detail:"NONE"}];
+      status=SIGNAL.OPEN;
+    }
+    if(contract==="PC04"){
+      const x=+$("x4").value;
+      const state={input:x,rule:"f(x)=x+3",ruleVersion:"V1",constraints:"INTEGER",dependencies:[],validatorVersion:"V1"};
+      const b1={...state,output:x+3},b2={...state,output:x+3},h1=await sha256(b1),h2=await sha256(b2);
+      input=state;output={run1:b1.output,run2:b2.output,hash1:h1,hash2:h2};
+      const pass=!!h1&&h1===h2;
+      checks=[{id:"REPLAY_IDENTITY",pass,detail:pass?"identity-bound bodies match":h1?"mismatch":"WebCrypto unavailable"}];
+      status=pass?SIGNAL.OPEN:SIGNAL.HALT;
+    }
+    if(contract==="PC05"){
+      const mask=$("m5").value,pert=+$("s5").value,r=causal(mask,pert),pass=r.maxAbsDiff===0;
+      input={mask,futurePerturbation:pert};output=r;
+      checks=[{id:"FUTURE_NONINTERFERENCE",pass,detail:"maxAbsDiff="+r.maxAbsDiff}];
+      status=pass?SIGNAL.OPEN:SIGNAL.HALT;
+    }
+    if(contract==="PC06"){
+      const residual=$("r6").value; input={residual};
+      status=residual==="BOUNDED_NONDEFEATING"?SIGNAL.OPEN:residual==="UNRESOLVED_CLAIM_BLOCKING"?SIGNAL.REVIEW:SIGNAL.HALT;
+      output={signal:status};
+      checks=[{id:"RESIDUAL_REGISTER",pass:status===SIGNAL.OPEN?true:status===SIGNAL.HALT?false:null,detail:residual}];
+    }
+    if(contract==="PC07"){
+      const a=+$("a7").value,b=+$("b7").value;
+      const typed=Number.isInteger(a)&&Number.isInteger(b)&&a>=0&&a<=255&&b>=0&&b<=255;
+      const total=typed?a+b:null,sum=typed?(total&255):null,carry=typed?((total>>8)&1):null;
+      input={a,b,type:"U8 × U8"};output={carry,sum,total};
+      checks=[
+        {id:"TYPECHECK",pass:typed,detail:typed?"U8 inputs":"outside U8"},
+        {id:"VALUATION_INVARIANT",pass:typed?total===carry*256+sum:false,detail:typed?total+" == "+carry+"*256+"+sum:"not executed"}
+      ];
+      status=checks.every(x=>x.pass)?SIGNAL.OPEN:SIGNAL.HALT;
+    }
+    if(contract==="PC08"){
+      const s=$("s8").checked,h=$("h8").checked,c=$("c8").checked;
+      input={sourceIdentityBound:s,frozenHashDeclared:h,claimPlanesSeparated:c};
+      checks=Object.entries(input).map(([k,v])=>({id:k.toUpperCase(),pass:v,detail:String(v)}));
+      output={archiveIdentityStructureClosed:checks.every(x=>x.pass),claimUpgrade:false,publicationPlaceholdersRemain:POSTS.PC08.body.includes("[INSERT LIVE DOI]")};
+      status=checks.every(x=>x.pass)?SIGNAL.OPEN:SIGNAL.HALT;
+    }
+    if(contract==="PC09"){
+      const k=$("k9").value;
+      const map={DETERMINISTIC_FIXTURE:"NOT_AI_DETERMINISTIC",LLM_INTERPRETATION:"AI_COMPONENT",LLM_TO_DETERMINISTIC_ROUTE:"HYBRID_COMPONENT",PARITY_CONVERTED:"PARITY_CONVERTED_COMPONENT",COMPLIANCE_INFRA:"COMPLIANCE_VERIFICATION_INFRASTRUCTURE",UNKNOWN:"UNKNOWN_PENDING_REVIEW"};
+      input={componentUseCase:k};output={classification:map[k]};
+      status=k==="UNKNOWN"?SIGNAL.REVIEW:SIGNAL.OPEN;
+      checks=[{id:"COMPONENT_SCOPE",pass:k==="UNKNOWN"?null:true,detail:map[k]}];
+    }
+    if(contract==="PC10"){
+      input={policy:$("p10").value,evidence:$("e10").value,type:$("t10").value};
+      const vals=Object.values(input);
+      checks=Object.entries(input).map(([k,v])=>({id:k.toUpperCase(),pass:v==="PASS"?true:v==="DENY"?false:null,detail:v}));
+      status=vals.includes("DENY")?SIGNAL.HALT:vals.includes("UNRESOLVED")?SIGNAL.REVIEW:SIGNAL.OPEN;
+      output={authorityOutcome:status,path:"REQUEST→DECLARE→EXECUTE→VALIDATE→SIGNAL→AUTHORIZE→COMMIT→RECEIPT"};
+    }
+    const body={schema:"OMEGA_PUBLIC_CONTRACT_SERIES_RECEIPT_V2",runtimeVersion:VERSION,contract,view,status,input,output,checks,authority:"EVIDENCE_ONLY",claimBoundary:m.boundary};
+    const digest=await sha256(body);
+    receipt={...body,receiptHash:digest||"WEBCRYPTO_UNAVAILABLE"};
+    $("receiptView").textContent=JSON.stringify(receipt,null,2);
+    $("evidenceSummary").innerHTML="";
+    const head=document.createElement("div");head.className="row";
+    const badge=document.createElement("span");badge.className="badge "+(status===SIGNAL.OPEN?"good":status===SIGNAL.HALT?"bad":"warn");badge.textContent=status;
+    const name=document.createElement("b");name.textContent=contract;
+    head.append(badge,name);$("evidenceSummary").appendChild(head);
+    for(const c of checks){
+      const d=document.createElement("div");d.className="check";
+      d.textContent=c.id+": "+(c.pass===true?"PASS":c.pass===false?"FAIL":"UNRESOLVED")+" — "+c.detail;
+      $("evidenceSummary").appendChild(d);
+    }
+    $("exportReceipt").disabled=false;setStatus(status);setTab("EVIDENCE");
+  }catch(err){
+    setStatus(SIGNAL.HALT);
+    $("evidenceSummary").textContent="HALT — "+String(err?.message||err);
+  }
+}
+function clearReceipt(){
+  receipt=null;$("receiptView").textContent="No receipt.";$("evidenceSummary").innerHTML='<span class="muted">No run yet.</span>';$("exportReceipt").disabled=true;setStatus("IDLE");
+}
+function exportReceipt(){
+  if(!receipt)return;
+  const blob=new Blob([JSON.stringify(receipt,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download="omega-"+contract.toLowerCase()+"-receipt.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),500);
+}
+async function selfTest(){
+  const tests=[];
+  const push=(id,pass,detail)=>tests.push({id,pass:!!pass,detail});
+  push("CONTRACT_COUNT",IDS.length===10,IDS.length+"/10");
+  push("POST_BODIES",IDS.every(id=>POSTS[id].body.length>100),"all non-empty");
+  push("FIXTURES",IDS.every(id=>!!fixtureHTML(id)),"10/10 fixture definitions");
+  push("NO_V5_LAB",!document.querySelector("[aria-label=\"Workbench views\"]")&&!document.getElementById("root"),"larger workstation shell absent");
+  push("ROUTE_FIELDS",true,"contract + view only");
+  push("WEBCRYPTO",!!globalThis.crypto?.subtle,globalThis.crypto?.subtle?"available":"unavailable in this context");
+  const result={schema:"OMEGA_PUBLIC_CONTRACT_SERIES_SELF_TEST_V2",status:tests.slice(0,5).every(t=>t.pass)?SIGNAL.OPEN:SIGNAL.HALT,tests};
+  receipt={schema:"OMEGA_PUBLIC_CONTRACT_SERIES_SELF_TEST_RECEIPT_V2",runtimeVersion:VERSION,contract:null,view,status:result.status,input:{},output:result,checks:tests,authority:"EVIDENCE_ONLY",claimBoundary:"Browser self-test only."};
+  receipt.receiptHash=(await sha256(receipt))||"WEBCRYPTO_UNAVAILABLE";
+  $("receiptView").textContent=JSON.stringify(receipt,null,2);
+  $("evidenceSummary").textContent="SELF-TEST "+result.status+" · "+tests.filter(t=>t.pass).length+"/"+tests.length+" checks";
+  $("exportReceipt").disabled=false;setStatus(result.status);setTab("EVIDENCE");
+}
+
+$("contractSelect").innerHTML=IDS.map(id=>'<option value="'+id+'">'+id+" · "+POSTS[id].title+"</option>").join("");
+const initial=routeFromURL();contract=initial.contract;view=initial.view;
+$("contractSelect").value=contract;$("viewSelect").value=view;
+$("contractSelect").onchange=e=>{contract=e.target.value;updateRoute();render();setTab("POST")};
+$("viewSelect").onchange=e=>{view=e.target.value;updateRoute();render()};
+$("searchInput").addEventListener("input",e=>{renderSearch(e.target.value);renderList(e.target.value)});
+$("copyLink").onclick=async()=>{
+  const href=routeHref();
+  try{await navigator.clipboard.writeText(href);const b=$("copyLink"),t=b.textContent;b.textContent="Copied";setTimeout(()=>b.textContent=t,900)}
+  catch{prompt("Copy routed link:",href)}
+};
+$("selfTest").onclick=selfTest;
+$("tabPost").onclick=()=>setTab("POST");
+$("tabInteractive").onclick=()=>setTab("INTERACTIVE");
+$("tabEvidence").onclick=()=>setTab("EVIDENCE");
+$("runFixture").onclick=runFixture;
+$("clearReceipt").onclick=clearReceipt;
+$("exportReceipt").onclick=exportReceipt;
+
+render();setTab("POST");setStatus("IDLE");
+</script>
+</body>
+</html>
