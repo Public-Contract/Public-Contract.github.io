@@ -1,0 +1,36 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "spdxVersion": "SPDX-2.3",
+  "name": "Public-Contract.github.io License Metadata",
+  "documentNamespace": "https://github.com/Public-Contract/Public-Contract.github.io/spdx/Public-Contract.github.io",
+  "creationInfo": {
+    "created": "2026-09-24T00:00:00Z",
+    "creators": [
+      "Person: Kevin Flint",
+      "Organization: Latent Studios"
+    ]
+  },
+  "dataLicense": "CC0-1.0",
+  "documentDescribes": [
+    "SPDXRef-Package-Public-Contract-github-io"
+  ],
+  "hasExtractedLicensingInfos": [
+    {
+      "licenseId": "LicenseRef-Public-Contract-Public-Inspection-Commercial-Boundary-1.0",
+      "name": "Public Contract Public Inspection / Commercial Boundary License Notice v1.0",
+      "extractedText": "Custom source-available public-inspection license. Noncommercial inspection, citation, review, evaluation, prior-art, educational, regulatory, procurement, interoperability, and scholarly uses are permitted as expressly stated in LICENSE. Commercial runtime, production, hosted service, SDK, API, connector, validator service, certification, marks, enterprise, OEM, white-label, resale, sublicense, managed-service, sponsor-controlled, customer-facing, and academic-commercial uses require separate written authorization. All rights not expressly granted are reserved."
+    }
+  ],
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-Package-Public-Contract-github-io",
+      "name": "Public-Contract.github.io",
+      "downloadLocation": "https://github.com/Public-Contract/Public-Contract.github.io",
+      "filesAnalyzed": false,
+      "licenseConcluded": "LicenseRef-Public-Contract-Public-Inspection-Commercial-Boundary-1.0",
+      "licenseDeclared": "LicenseRef-Public-Contract-Public-Inspection-Commercial-Boundary-1.0",
+      "copyrightText": "Copyright (c) 2026 Kevin Flint / Latent Studios. All rights reserved except as expressly stated in LICENSE.",
+      "description": "Public Contract PC01-PC10 browser laboratory, bounded validation fixtures, receipts, Pixel Witness evidence, and public technical teaching materials."
+    }
+  ]
+}
