@@ -1,0 +1,590 @@
+PUBLIC CONTRACT PUBLIC INSPECTION / COMMERCIAL BOUNDARY LICENSE NOTICE v1.0
+
+SPDX-License-Identifier: LicenseRef-Public-Contract-Public-Inspection-Commercial-Boundary-1.0
+
+Copyright (c) 2026 Kevin Flint / Latent Studios.
+All rights reserved except as expressly stated below.
+
+Repository: Public-Contract.github.io
+Canonical URL: https://github.com/Public-Contract/Public-Contract.github.io
+Public Interface: https://public-contract.github.io/
+
+1. PURPOSE
+
+This repository publishes a bounded public browser laboratory, teaching surface, technical specimens, validation fixtures, receipt machinery, Pixel Witness machinery, schemas, source-bound explanatory materials, and related public technical documentation.
+
+This Notice establishes the boundary between public inspection and commercial or production rights.
+
+This repository is source-available for the limited purposes expressly stated below.
+
+It is not released under an open-source license.
+
+2. PROTECTED MATERIALS
+
+"Protected Materials" means the original copyrightable expression contained in this repository, including:
+
+- source code;
+- HTML;
+- CSS;
+- JavaScript;
+- original written material;
+- original selection, organization, and arrangement;
+- validation fixtures;
+- receipt formats;
+- original schemas;
+- Pixel Witness implementation;
+- evidence structures;
+- teaching layers;
+- technical documentation;
+- original diagrams and graphics;
+- generated witness encodings to the extent protectable;
+- test structures;
+- original software implementations;
+- original indexing and addressability structures;
+- and other original material owned or controlled by Kevin Flint / Latent Studios.
+
+Protected Materials do not include third-party works except to the extent that Kevin Flint / Latent Studios owns a separate original protectable contribution.
+
+3. LIMITED PUBLIC INSPECTION LICENSE
+
+Subject to this Notice, permission is granted to:
+
+a. view and execute the publicly hosted browser laboratory;
+
+b. view the public repository;
+
+c. fork the public repository through GitHub to the extent required or permitted by GitHub's platform functionality and applicable GitHub terms;
+
+d. download or clone the repository for noncommercial inspection, archival, security review, interoperability analysis, procurement review, regulatory review, prior-art review, scholarly review, teaching, and evaluation;
+
+e. quote and cite reasonable portions of the Protected Materials for criticism, commentary, scholarship, review, or attribution;
+
+f. execute the unmodified public fixtures locally for noncommercial evaluation and reproducibility review; and
+
+g. retain archival copies for evidentiary, scholarly, regulatory, procurement, or prior-art purposes.
+
+These permissions are limited, non-exclusive, non-transferable, non-sublicensable, and do not include commercial or production rights.
+
+4. NO OPEN-SOURCE GRANT
+
+No permission is granted under MIT, Apache, BSD, GPL, AGPL, MPL, Creative Commons, or any other open-source or open-content license unless a specific file expressly states otherwise.
+
+Public availability does not mean open source.
+
+Publication on GitHub does not mean open source.
+
+Publication through GitHub Pages does not mean open source.
+
+A DOI does not mean open source.
+
+Public citation does not mean open source.
+
+Academic discussion does not mean open source.
+
+Prior-art disclosure does not mean open source.
+
+Public execution does not mean open source.
+
+All rights not expressly granted remain reserved.
+
+5. NO COMMERCIAL OR PRODUCTION GRANT
+
+Except under a separate signed written agreement, no right is granted to use, copy, adapt, integrate, deploy, host, distribute, sublicense, resell, white-label, OEM, monetize, or provide the Protected Materials, in whole or in material part, for or as:
+
+a. a commercial product;
+
+b. a paid software feature;
+
+c. production infrastructure;
+
+d. a hosted service;
+
+e. a managed service;
+
+f. Software as a Service;
+
+g. an API product;
+
+h. an SDK;
+
+i. a library or package;
+
+j. a connector;
+
+k. an adapter;
+
+l. a wrapper;
+
+m. a binding;
+
+n. a validator service;
+
+o. validation-as-a-service;
+
+p. a compliance service;
+
+q. a certification service;
+
+r. an assurance service;
+
+s. an audit product;
+
+t. an enterprise deployment;
+
+u. a customer-facing deployment;
+
+v. a sponsor-controlled deployment;
+
+w. an OEM offering;
+
+x. a white-label offering;
+
+y. a resale offering;
+
+z. a sublicensed offering;
+
+aa. a marketplace product;
+
+ab. a commercial training platform;
+
+ac. a commercially operated research platform;
+
+ad. a regulated production deployment;
+
+ae. a hospital production deployment;
+
+af. a government operational deployment;
+
+ag. a commercial academic spinout;
+
+ah. a technology-transfer commercialization;
+
+ai. a competing commercial implementation that copies or adapts protectable expression from the Protected Materials; or
+
+aj. any other revenue-generating or production use materially dependent upon Protected Materials.
+
+A separate signed commercial license, order form, or other written authorization is required before any such use.
+
+6. DERIVATIVE WORKS AND REDISTRIBUTION
+
+The limited public inspection rights granted above do not create a general right to publish, redistribute, commercialize, or sublicense modified or derivative versions of the Protected Materials.
+
+Private noncommercial modifications may be made solely for:
+
+- evaluation;
+- testing;
+- security review;
+- interoperability analysis;
+- scholarly research;
+- reproducibility review; or
+- internal technical assessment.
+
+Such private modifications may not be represented as:
+
+- official;
+- certified;
+- endorsed;
+- approved;
+- compatible;
+- production-authorized;
+- commercially licensed;
+- regulator-approved; or
+- affiliated with Kevin Flint / Latent Studios.
+
+No license is granted to remove or obscure:
+
+- copyright notices;
+- license notices;
+- provenance notices;
+- attribution notices;
+- source-identity notices;
+- claim-boundary notices;
+- evidence-boundary notices; or
+- authorship notices.
+
+7. AI, MODEL TRAINING, AND AUTOMATED CORPUS USE
+
+Except where independently permitted by non-waivable applicable law or by separate signed written agreement, no license is granted to use Protected Materials as or within:
+
+- model-training data;
+- fine-tuning data;
+- reinforcement-learning data;
+- preference-learning data;
+- distillation data;
+- embedding corpora;
+- retrieval corpora;
+- benchmark-construction datasets;
+- synthetic-data generation datasets;
+- automated code-generation training corpora;
+- evaluation corpora;
+- representation-learning datasets; or
+- automated model-development datasets.
+
+This section does not claim ownership of facts, ideas, methods, systems, mathematical principles, or other subject matter that copyright law does not protect.
+
+8. ACADEMIC AND RESEARCH USE
+
+Academic, university, school, nonprofit research, classroom, thesis, dissertation, and scholarly use is permitted only within the noncommercial inspection, citation, teaching, review, reproducibility, interoperability-analysis, and research purposes expressly granted by this Notice.
+
+Academic identity does not create a commercial license.
+
+Academic identity does not create a production license.
+
+A separate signed commercial agreement is required before any:
+
+- university;
+- laboratory;
+- professor;
+- researcher;
+- student team;
+- technology-transfer office;
+- incubator;
+- accelerator;
+- startup;
+- spinout;
+- sponsor-controlled project;
+- hospital affiliate;
+- government partner;
+- research consortium; or
+- other academic-affiliated entity
+
+uses Protected Materials for:
+
+- production;
+- paid services;
+- commercial products;
+- sponsor-controlled deployment;
+- hosted service;
+- enterprise deployment;
+- certification;
+- compatibility services;
+- validator services;
+- customer-facing systems;
+- OEM use;
+- white-label use;
+- resale;
+- sublicense;
+- managed services; or
+- other commercial purposes.
+
+9. RECEIPTS, PIXEL WITNESSES, AND GENERATED EVIDENCE
+
+Machine-readable receipts, evidence archives, Pixel Witness outputs, witness metadata, exported evidence, and other generated artifacts produced by the public browser laboratory are evidence artifacts for bounded public fixtures.
+
+Possession of a generated artifact does not grant:
+
+a. a license to the underlying Protected Materials;
+
+b. certification status;
+
+c. regulatory approval;
+
+d. legal approval;
+
+e. partner status;
+
+f. endorsement;
+
+g. production authorization;
+
+h. commercial deployment rights;
+
+i. rights to reproduce protected runtime implementations;
+
+j. rights to operate a commercial validator service; or
+
+k. rights to use Kevin Flint, Latent Studios, Public Contract, MC, Omega-SBS, or related marks as product identity.
+
+Where an artifact contains:
+
+LicenseRef-Public-Contract-Public-Inspection-Commercial-Boundary-1.0
+
+that identifier gives notice that the artifact is associated with this license boundary.
+
+10. THIRD-PARTY SOURCES, FACTS, METHODS, MATHEMATICS, AND ARCHITECTURES
+
+Nothing in this Notice claims ownership of:
+
+- third-party source material;
+- facts;
+- ideas;
+- procedures;
+- processes;
+- systems;
+- methods of operation;
+- concepts;
+- principles;
+- discoveries;
+- mathematical facts;
+- mathematical structures;
+- category theory;
+- public standards;
+- public laws;
+- regulatory texts;
+- or third-party architectures
+
+merely because they are discussed, indexed, represented, tested, analyzed, or referenced in this repository.
+
+In particular, source facts and architecture attributed to:
+
+Vaswani et al.,
+Attention Is All You Need,
+2017
+
+remain attributed to their original authors.
+
+Original Flint / Latent Studios contributions may include, where applicable:
+
+- original expression;
+- indexing;
+- capsule identities;
+- structural addressability;
+- software;
+- validation implementations;
+- receipt machinery;
+- assurance overlays;
+- original schemas;
+- evidence structures;
+- runtime implementations;
+- control-plane implementations;
+- source mappings;
+- graph structures;
+- braid representations;
+- witness systems;
+- and other original protectable expression.
+
+11. INDEPENDENT IMPLEMENTATION BOUNDARY
+
+This Notice does not prohibit independent work based solely upon:
+
+- facts;
+- ideas;
+- methods;
+- mathematical principles;
+- systems;
+- public standards;
+- public laws;
+- public regulatory requirements;
+- or other subject matter that copyright law does not protect.
+
+An independent implementation must not copy, adapt, redistribute, or commercially exploit protectable expression from the Protected Materials without permission.
+
+An independent implementation may not falsely claim:
+
+- certification;
+- endorsement;
+- partnership;
+- official compatibility;
+- official provenance;
+- authorship;
+- sponsorship;
+- regulatory approval;
+- or licensed status.
+
+No patent license is granted by this Notice.
+
+12. MARKS, NAMES, CERTIFICATION, AND ENDORSEMENT
+
+No right is granted to use as product identity or branding:
+
+- PUBLIC CONTRACT;
+- LATENT STUDIOS;
+- MC;
+- MONOIDAL CALCULUS;
+- OMEGA-SBS;
+- related names;
+- related logos;
+- certification marks;
+- compatibility marks;
+- seals;
+- badges;
+- or other source-identifying marks
+
+except as expressly authorized in writing.
+
+No public receipt, test result, screenshot, DOI, archive record, source extraction, or successful fixture execution authorizes a person or entity to claim:
+
+a. certification;
+
+b. official compatibility;
+
+c. partnership;
+
+d. sponsorship;
+
+e. endorsement;
+
+f. regulatory approval;
+
+g. commercial authorization;
+
+h. production authorization; or
+
+i. official implementation status.
+
+Accurate descriptive attribution remains subject to applicable law.
+
+13. NON-PUBLIC TECHNOLOGY AND INTERNAL SYSTEMS
+
+Nothing in this repository grants access to, rights in, or permission to reconstruct non-public production technology.
+
+Excluded systems include, without limitation:
+
+- unreleased lowering systems;
+- normalization systems;
+- compiler construction internals;
+- validator internals;
+- routing internals;
+- proof-binding systems;
+- certificate-generation systems;
+- production regulatory kernels;
+- governance internals;
+- commercial-control systems;
+- pricing automation;
+- approval workflows;
+- dealdesk systems;
+- internal classification engines;
+- internal facts-questionnaire systems;
+- unreleased SBS internals;
+- unreleased Omega internals;
+- private datasets;
+- credentials;
+- keys;
+- secrets;
+- internal infrastructure;
+- unreleased source code;
+- and other non-public materials.
+
+Public disclosure of one layer is not disclosure or waiver of another layer.
+
+14. GITHUB PLATFORM RIGHTS
+
+Nothing in this Notice is intended to contradict rights that must be granted to GitHub or GitHub users solely to operate, view, display, perform, or fork the public repository through GitHub's service under GitHub's applicable Terms of Service.
+
+Such platform rights do not create additional:
+
+- commercial rights;
+- production rights;
+- redistribution rights;
+- certification rights;
+- sublicensing rights;
+- OEM rights;
+- white-label rights;
+- validator-service rights;
+- or enterprise-deployment rights
+
+outside the rights expressly granted by this Notice.
+
+15. NO IMPLIED LICENSE; NO ESTOPPEL
+
+No license or other right is granted by:
+
+- implication;
+- estoppel;
+- publication;
+- public availability;
+- interoperability necessity;
+- prior-art disclosure;
+- DOI publication;
+- course participation;
+- demonstration;
+- evaluation;
+- receipt generation;
+- successful execution;
+- academic use;
+- regulatory discussion;
+- procurement review;
+- or any similar theory
+
+except for rights expressly stated in this Notice or in a separate signed written agreement.
+
+16. COMMERCIAL CONVERSION
+
+Any person or entity seeking rights involving:
+
+- commercial deployment;
+- production deployment;
+- hosted execution;
+- hosted validation;
+- enterprise deployment;
+- SDKs;
+- APIs;
+- connectors;
+- adapters;
+- validator services;
+- certification;
+- compatibility marks;
+- OEM;
+- white-label;
+- resale;
+- sublicense;
+- managed services;
+- sponsor-controlled deployment;
+- customer-facing deployment;
+- academic commercialization;
+- spinout commercialization;
+- technology transfer;
+- or similar commercial use
+
+must obtain a separate signed commercial agreement or order form.
+
+Commercial inquiry guidance may be published separately in:
+
+COMMERCIAL_INQUIRY.md
+
+17. TERMINATION OF EXPRESS PERMISSIONS
+
+The express permissions granted by this Notice terminate automatically upon material breach of the conditions attached to those permissions.
+
+Upon termination, the breaching party must cease uses that depended upon those express permissions, except to the extent continued retention or use is independently authorized by applicable law or a separate written agreement.
+
+18. DISCLAIMER
+
+THE PROTECTED MATERIALS, PUBLIC LABORATORY, PUBLIC FIXTURES, RECEIPTS, PIXEL WITNESSES, EXAMPLES, DOCUMENTATION, AND OTHER MATERIALS ARE PROVIDED "AS IS" AND "AS AVAILABLE."
+
+NO WARRANTY OF ANY KIND IS MADE, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF:
+
+- MERCHANTABILITY;
+- FITNESS FOR A PARTICULAR PURPOSE;
+- TITLE;
+- NON-INFRINGEMENT;
+- ACCURACY;
+- COMPLETENESS;
+- SECURITY;
+- REGULATORY SUFFICIENCY;
+- LEGAL SUFFICIENCY;
+- CERTIFICATION;
+- FITNESS FOR PRODUCTION;
+- OR RESULTS.
+
+A public:
+
+OPEN
+
+REVIEW_REQUIRED
+
+or
+
+HALT
+
+signal is a bounded technical result only.
+
+It is not:
+
+- legal advice;
+- regulatory approval;
+- certification by a competent authority;
+- notified-body approval;
+- government authorization;
+- deployment permission;
+- or commercial licensing permission.
+
+19. LIMITATION OF LIABILITY
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, KEVIN FLINT / LATENT STUDIOS WILL NOT BE LIABLE FOR INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, OR FOR LOST PROFITS, LOST REVENUE, LOST DATA, BUSINESS INTERRUPTION, OR RELIANCE UPON A PUBLIC FIXTURE, RECEIPT, PIXEL WITNESS, TECHNICAL RESULT, OR PUBLIC DEMONSTRATION.
+
+20. RESERVED RIGHTS
+
+All rights not expressly granted are reserved.
+
+END OF LICENSE NOTICE
