@@ -1,0 +1,12 @@
+{
+  "schema": "PUBLIC_CONTRACT_OTS_ANCHOR_SPEC_V1",
+  "scope": "Public Contract external checkpoint chain",
+  "hash_algorithm": "sha256",
+  "canonicalization": "JSON_SORT_KEYS_COMPACT_ASCII_V1",
+  "proof_method": "OpenTimestamps",
+  "anchored_object": "canonical checkpoint preimage",
+  "binding_rule": "sha256(canonical_preimage) == checkpoint.tip",
+  "confirmation_rule": "pending is not Bitcoin-confirmed; confirmed requires a BitcoinBlockHeaderAttestation in the upgraded .ots proof",
+  "time_semantics": "A confirmed OpenTimestamps proof establishes that the anchored checkpoint existed no later than the attesting Bitcoin block; it does not prove the exact local observed_at timestamp.",
+  "workflow": ".github/workflows/public-contract-ots-anchor.yml"
+}
