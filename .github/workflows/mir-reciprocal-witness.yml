@@ -1,0 +1,225 @@
+name: Public Contract reciprocal MIR witness
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "35 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  witness:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Fetch MIR status and advance external checkpoint if needed
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import datetime
+          import hashlib
+          import json
+          import pathlib
+          import re
+          import urllib.request
+
+          MIR_URL = "https://mir.events/v1/transparency/walk/status"
+          SELF_STATUS_PATH = pathlib.Path("x/walk/status")
+          HELD_PATH = pathlib.Path("x/walk/held/mir.json")
+          CHECKPOINT_DIR = pathlib.Path("x/walk/checkpoints")
+
+          HEX64 = re.compile(r"^[0-9a-f]{64}$")
+
+          def fetch_json(url):
+              request = urllib.request.Request(
+                  url,
+                  headers={
+                      "Accept": "application/json",
+                      "User-Agent": "Public-Contract-Peer-Witness/1.0",
+                  },
+              )
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  return json.loads(response.read().decode("utf-8"))
+
+          def first_present(obj, names):
+              for name in names:
+                  if name in obj and obj[name] is not None:
+                      return obj[name]
+              return None
+
+          def require_hex64(name, value):
+              if not isinstance(value, str) or not HEX64.fullmatch(value):
+                  raise SystemExit(f"{name} must be exactly 64 lowercase hexadecimal characters")
+              return value
+
+          def require_nonnegative_int(name, value):
+              if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                  raise SystemExit(f"{name} must be a non-negative integer")
+              return value
+
+          if not SELF_STATUS_PATH.exists():
+              raise SystemExit("Missing x/walk/status")
+
+          self_status = json.loads(SELF_STATUS_PATH.read_text(encoding="utf-8"))
+          self_tip = require_hex64(
+              "self.tip",
+              first_present(self_status, ("tip", "current_tip", "latest_tip")),
+          )
+          self_seq = require_nonnegative_int(
+              "self.seq",
+              first_present(self_status, ("seq", "last_seq", "blocks")),
+          )
+          self_genesis = require_hex64(
+              "self.genesis_hash",
+              self_status.get("genesis_hash"),
+          )
+
+          mir = fetch_json(MIR_URL)
+          mir_tip = require_hex64(
+              "mir.tip",
+              first_present(mir, ("tip", "current_tip", "latest_tip")),
+          )
+          mir_seq = require_nonnegative_int(
+              "mir.seq",
+              first_present(mir, ("seq", "last_seq", "blocks")),
+          )
+          mir_genesis = require_hex64(
+              "mir.genesis_hash",
+              mir.get("genesis_hash"),
+          )
+
+          existing = {
+              "schema": "PUBLIC_CONTRACT_PEER_OBSERVATIONS_V1",
+              "holder": "public-contract.github.io",
+              "peer": "mir",
+              "count": 0,
+              "newest_first": True,
+              "tips": [],
+          }
+
+          if HELD_PATH.exists():
+              loaded = json.loads(HELD_PATH.read_text(encoding="utf-8"))
+              if isinstance(loaded, dict):
+                  existing.update(loaded)
+
+          tips = existing.get("tips")
+          if not isinstance(tips, list):
+              raise SystemExit("Existing x/walk/held/mir.json has invalid tips array")
+
+          # peer + tip is the identity. Re-seeing the same MIR tip is intentionally a no-op.
+          if any(
+              isinstance(row, dict)
+              and row.get("peer") == "mir"
+              and row.get("peer_tip") == mir_tip
+              for row in tips
+          ):
+              print("MIR tip already observed; no repository change.")
+              raise SystemExit(0)
+
+          observed_at = (
+              datetime.datetime.now(datetime.timezone.utc)
+              .isoformat(timespec="milliseconds")
+              .replace("+00:00", "Z")
+          )
+
+          observation = {
+              "peer": "mir",
+              "peer_host": "mir.events",
+              "peer_tip": mir_tip,
+              "peer_seq": mir_seq,
+              "peer_genesis_hash": mir_genesis,
+              "observed_at": observed_at,
+              "liveness": "self-consistent",
+              "source_url": MIR_URL,
+              "our_seq_at_observation": self_seq,
+              "our_tip_at_observation": self_tip,
+          }
+
+          # Advance the PUBLIC CONTRACT EXTERNAL checkpoint chain.
+          # This does not modify the browser-local execution ledger.
+          next_seq = self_seq + 1
+          checkpoint_preimage = {
+              "schema": "PUBLIC_CONTRACT_EXTERNAL_CHECKPOINT_V1",
+              "seq": next_seq,
+              "genesis_hash": self_genesis,
+              "prior_tip": self_tip,
+              "peer_observation": observation,
+          }
+
+          canonical = json.dumps(
+              checkpoint_preimage,
+              sort_keys=True,
+              separators=(",", ":"),
+              ensure_ascii=True,
+          ).encode("ascii")
+
+          next_tip = hashlib.sha256(canonical).hexdigest()
+
+          checkpoint = dict(checkpoint_preimage)
+          checkpoint["tip"] = next_tip
+          checkpoint["hash_algorithm"] = "sha256"
+          checkpoint["canonicalization"] = "JSON_SORT_KEYS_COMPACT_ASCII_V1"
+
+          observation["our_checkpoint_seq"] = next_seq
+          observation["our_checkpoint_tip"] = next_tip
+
+          tips.insert(0, observation)
+          existing["tips"] = tips
+          existing["count"] = len(tips)
+          existing["what_this_establishes"] = (
+              "At observed_at, Public Contract independently fetched the MIR status endpoint "
+              "and observed peer_tip, peer_seq, and peer_genesis_hash. The observation is then "
+              "committed into the next Public Contract external checkpoint."
+          )
+          existing["what_this_does_not_establish"] = (
+              "This observation does not independently prove the internal MIR computation or "
+              "the truth of events behind the observed checkpoint. It proves what the named "
+              "endpoint served when Public Contract fetched it."
+          )
+
+          HELD_PATH.parent.mkdir(parents=True, exist_ok=True)
+          CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)
+
+          HELD_PATH.write_text(
+              json.dumps(existing, indent=2, ensure_ascii=True) + "\n",
+              encoding="ascii",
+          )
+
+          checkpoint_path = CHECKPOINT_DIR / f"{next_seq:08d}.json"
+          checkpoint_path.write_text(
+              json.dumps(checkpoint, indent=2, ensure_ascii=True) + "\n",
+              encoding="ascii",
+          )
+
+          new_status = {
+              "tip": next_tip,
+              "seq": next_seq,
+              "genesis_hash": self_genesis,
+          }
+          SELF_STATUS_PATH.write_text(
+              json.dumps(new_status, indent=2, ensure_ascii=True) + "\n",
+              encoding="ascii",
+          )
+
+          print(f"Observed MIR seq {mir_seq}, tip {mir_tip}")
+          print(f"Advanced Public Contract external checkpoint to seq {next_seq}, tip {next_tip}")
+          PY
+
+      - name: Commit reciprocal observation
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No new MIR tip; nothing to commit."
+            exit 0
+          fi
+
+          git config user.name "Public Contract Peer Witness"
+          git config user.email "actions@users.noreply.github.com"
+
+          git add x/walk/status x/walk/held/mir.json x/walk/checkpoints/
+          git commit -m "Record reciprocal MIR peer observation"
+          git push
