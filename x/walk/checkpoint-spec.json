@@ -1,0 +1,65 @@
+{
+  "schema": "PUBLIC_CONTRACT_EXTERNAL_CHECKPOINT_HASH_SPEC_V1",
+  "status": "ACTIVE",
+  "scope": "Public Contract external checkpoint chain",
+  "applies_to": "PUBLIC_CONTRACT_EXTERNAL_CHECKPOINT_V1",
+  "hash_algorithm": "sha256",
+  "canonicalization": {
+    "name": "JSON_SORT_KEYS_COMPACT_ASCII_V1",
+    "procedure": [
+      "Construct the preimage object using only the allowlisted fields below.",
+      "Serialize as JSON with keys sorted recursively.",
+      "Use separators ',' and ':' with no insignificant whitespace.",
+      "Encode non-ASCII characters using JSON escapes (ensure_ascii=true).",
+      "Encode the serialized JSON as ASCII bytes.",
+      "Compute SHA-256 over those ASCII bytes."
+    ]
+  },
+  "preimage_projection": {
+    "top_level_fields_in_order_independent_allowlist": [
+      "schema",
+      "seq",
+      "genesis_hash",
+      "prior_tip",
+      "peer_observation"
+    ],
+    "peer_observation_fields_in_order_independent_allowlist": [
+      "peer",
+      "peer_host",
+      "peer_tip",
+      "peer_seq",
+      "peer_genesis_hash",
+      "observed_at",
+      "liveness",
+      "source_url",
+      "our_seq_at_observation",
+      "our_tip_at_observation"
+    ],
+    "rule": "Fields not listed in the applicable allowlist are excluded from the hash preimage, even if they are present in the published checkpoint document."
+  },
+  "published_after_hash": {
+    "checkpoint_level_fields_not_in_preimage": [
+      "tip",
+      "hash_algorithm",
+      "canonicalization"
+    ],
+    "peer_observation_fields_not_in_preimage": [
+      "our_checkpoint_seq",
+      "our_checkpoint_tip"
+    ],
+    "reason": "These fields are derived from, describe, or self-reference the checkpoint produced by hashing the preimage and therefore cannot be members of that preimage."
+  },
+  "verification_algorithm": [
+    "Fetch the checkpoint document for sequence N.",
+    "Project the checkpoint into the allowlisted preimage shape defined above.",
+    "Canonicalize the projected object using JSON_SORT_KEYS_COMPACT_ASCII_V1.",
+    "Compute SHA-256 of the canonical ASCII bytes.",
+    "Require the digest to equal checkpoint.tip and the current status tip when N is the current sequence."
+  ],
+  "test_vector": {
+    "checkpoint": "/x/walk/checkpoints/00000002.json",
+    "canonical_preimage": "/x/walk/anchors/00000002.preimage.json",
+    "expected_sha256": "3b6e145bbd2d89585ee1c80faea92725b9a3f05409d71d632bc578bfe7f20627"
+  },
+  "immutability_note": "This specification documents the derivation rule for already-published checkpoints. It does not modify or rewrite checkpoint 2 or any prior chain state."
+}
