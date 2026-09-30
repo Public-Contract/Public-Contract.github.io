@@ -1,0 +1,20 @@
+{
+  "schema": "PUBLIC_CONTRACT_VERIFICATION_SURFACE_V1",
+  "seq": 2,
+  "tip": "3b6e145bbd2d89585ee1c80faea92725b9a3f05409d71d632bc578bfe7f20627",
+  "status": "/x/walk/status",
+  "checkpoint": "/x/walk/checkpoints/00000002.json",
+  "checkpoint_spec": "/x/walk/checkpoint-spec.json",
+  "canonical_preimage": "/x/walk/anchors/00000002.preimage.json",
+  "ots_proof": "/x/walk/anchors/00000002.preimage.json.ots",
+  "ots_status": "/x/walk/anchors/status.json",
+  "ots_state": "confirmed",
+  "verification_sequence": [
+    "Fetch checkpoint and checkpoint_spec.",
+    "Derive the allowlisted canonical preimage from the checkpoint.",
+    "SHA-256 the canonical ASCII bytes and require equality with tip.",
+    "Fetch the published .ots proof.",
+    "Upgrade or verify the .ots proof independently; do not treat pending as Bitcoin-confirmed."
+  ],
+  "trust_boundary": "The verification surface publishes evidence and derivation rules. A verifier is expected to recompute rather than trust this record."
+}
