@@ -1,0 +1,400 @@
+# =============================================================================
+# BUILD HEADER
+# artifact_id: PUBLIC_CONTRACT_OTS_ANCHOR_WORKFLOW_V1_2
+# repository: Public-Contract/Public-Contract.github.io
+# role: external Bitcoin timestamp anchoring for Public Contract checkpoints
+# stable_baseline_preserved: true
+# modifies_checkpoint_chain: false
+# immediate_submission_trigger:
+#   - workflow completion: "Public Contract reciprocal MIR witness"
+#   - manual dispatch
+#   - first installation push
+# confirmation_poll: every 30 minutes
+# dependency: opentimestamps-client==0.7.2
+# =============================================================================
+
+name: Public Contract OpenTimestamps anchor
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - "Public Contract reciprocal MIR witness"
+    types:
+      - completed
+  push:
+    paths:
+      - ".github/workflows/public-contract-ots-anchor.yml"
+  schedule:
+    - cron: "7,37 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: public-contract-ots-anchor
+  cancel-in-progress: false
+
+jobs:
+  anchor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out current main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Install pinned OpenTimestamps client
+        run: python3 -m pip install --disable-pip-version-check opentimestamps-client==0.7.2
+
+      - name: Reconstruct and verify canonical checkpoint preimage
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import copy
+          import hashlib
+          import json
+          import pathlib
+
+          STATUS = pathlib.Path("x/walk/status")
+          CHECKPOINTS = pathlib.Path("x/walk/checkpoints")
+          ANCHORS = pathlib.Path("x/walk/anchors")
+          CHECKPOINT_SPEC = pathlib.Path("x/walk/checkpoint-spec.json")
+
+          if not CHECKPOINT_SPEC.exists():
+              raise SystemExit("Missing x/walk/checkpoint-spec.json; refusing to publish unverifiable checkpoint evidence")
+
+          status = json.loads(STATUS.read_text(encoding="utf-8"))
+          seq = status["seq"]
+          tip = status["tip"]
+
+          checkpoint_path = CHECKPOINTS / f"{seq:08d}.json"
+          checkpoint = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+
+          if checkpoint.get("seq") != seq:
+              raise SystemExit("status/checkpoint sequence mismatch; refusing to anchor")
+          if checkpoint.get("tip") != tip:
+              raise SystemExit("status/checkpoint tip mismatch; refusing to anchor")
+
+          # The reciprocal witness computes checkpoint.tip before adding these
+          # two self-reference fields to peer_observation. Reconstruct the exact
+          # hashed preimage and prove it still hashes to the published tip.
+          preimage = {
+              "schema": checkpoint["schema"],
+              "seq": checkpoint["seq"],
+              "genesis_hash": checkpoint["genesis_hash"],
+              "prior_tip": checkpoint["prior_tip"],
+              "peer_observation": copy.deepcopy(checkpoint["peer_observation"]),
+          }
+          preimage["peer_observation"].pop("our_checkpoint_seq", None)
+          preimage["peer_observation"].pop("our_checkpoint_tip", None)
+
+          canonical = json.dumps(
+              preimage,
+              sort_keys=True,
+              separators=(",", ":"),
+              ensure_ascii=True,
+          ).encode("ascii")
+
+          computed_tip = hashlib.sha256(canonical).hexdigest()
+          if computed_tip != tip:
+              raise SystemExit(
+                  f"canonical preimage hash mismatch: computed={computed_tip} published={tip}"
+              )
+
+          ANCHORS.mkdir(parents=True, exist_ok=True)
+
+          preimage_path = ANCHORS / f"{seq:08d}.preimage.json"
+          if preimage_path.exists() and preimage_path.read_bytes() != canonical:
+              raise SystemExit("existing canonical preimage differs; refusing overwrite")
+
+          preimage_path.write_bytes(canonical)
+          (ANCHORS / "current-seq.txt").write_text(f"{seq}\n", encoding="ascii")
+          (ANCHORS / "current-tip.txt").write_text(f"{tip}\n", encoding="ascii")
+
+          spec = {
+              "schema": "PUBLIC_CONTRACT_OTS_ANCHOR_SPEC_V1",
+              "scope": "Public Contract external checkpoint chain",
+              "hash_algorithm": "sha256",
+              "canonicalization": "JSON_SORT_KEYS_COMPACT_ASCII_V1",
+              "proof_method": "OpenTimestamps",
+              "anchored_object": "canonical checkpoint preimage",
+              "binding_rule": "sha256(canonical_preimage) == checkpoint.tip",
+              "confirmation_rule": (
+                  "pending is not Bitcoin-confirmed; confirmed requires a "
+                  "BitcoinBlockHeaderAttestation in the upgraded .ots proof"
+              ),
+              "time_semantics": (
+                  "A confirmed OpenTimestamps proof establishes that the anchored "
+                  "checkpoint existed no later than the attesting Bitcoin block; "
+                  "it does not prove the exact local observed_at timestamp."
+              ),
+              "workflow": ".github/workflows/public-contract-ots-anchor.yml",
+          }
+
+          (ANCHORS / "spec.json").write_text(
+              json.dumps(spec, indent=2, ensure_ascii=True) + "\n",
+              encoding="ascii",
+          )
+          PY
+
+      - name: Submit current checkpoint immediately when not yet stamped
+        shell: bash
+        run: |
+          SEQ="$(tr -d '\n' < x/walk/anchors/current-seq.txt)"
+          PADDED="$(printf '%08d' "$SEQ")"
+          PREIMAGE="x/walk/anchors/${PADDED}.preimage.json"
+          PROOF="${PREIMAGE}.ots"
+
+          if [ ! -f "$PROOF" ]; then
+            echo "Submitting Public Contract checkpoint ${SEQ} to OpenTimestamps"
+            ots stamp "$PREIMAGE"
+          else
+            echo "Checkpoint ${SEQ} already has an OpenTimestamps receipt"
+          fi
+
+      - name: Upgrade receipt when Bitcoin attestation is available
+        shell: bash
+        run: |
+          SEQ="$(tr -d '\n' < x/walk/anchors/current-seq.txt)"
+          PADDED="$(printf '%08d' "$SEQ")"
+          PROOF="x/walk/anchors/${PADDED}.preimage.json.ots"
+
+          # Pending is expected for a fresh receipt. Upgrade is best-effort and
+          # never blocks or rewrites the Public Contract checkpoint chain.
+          ots upgrade "$PROOF" || true
+          rm -f "${PROOF}.bak"
+
+      - name: Publish machine-readable anchor state
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import datetime
+          import json
+          import pathlib
+
+          from opentimestamps.core.notary import (
+              BitcoinBlockHeaderAttestation,
+              PendingAttestation,
+          )
+          from opentimestamps.core.serialize import BytesDeserializationContext
+          from opentimestamps.core.timestamp import DetachedTimestampFile
+
+          ANCHORS = pathlib.Path("x/walk/anchors")
+          seq = int(
+              (ANCHORS / "current-seq.txt")
+              .read_text(encoding="ascii")
+              .strip()
+          )
+          tip = (
+              (ANCHORS / "current-tip.txt")
+              .read_text(encoding="ascii")
+              .strip()
+          )
+
+          padded = f"{seq:08d}"
+          proof_path = ANCHORS / f"{padded}.preimage.json.ots"
+          per_seq_path = ANCHORS / f"{padded}.json"
+
+          detached = DetachedTimestampFile.deserialize(
+              BytesDeserializationContext(proof_path.read_bytes())
+          )
+
+          pending_calendars = []
+          bitcoin_block_heights = []
+
+          def walk(timestamp):
+              for attestation in timestamp.attestations:
+                  if isinstance(attestation, PendingAttestation):
+                      uri = attestation.uri
+                      if isinstance(uri, bytes):
+                          uri = uri.decode("utf-8", "replace")
+                      if uri not in pending_calendars:
+                          pending_calendars.append(uri)
+
+                  elif isinstance(attestation, BitcoinBlockHeaderAttestation):
+                      height = getattr(attestation, "height", None)
+                      if (
+                          height is not None
+                          and height not in bitcoin_block_heights
+                      ):
+                          bitcoin_block_heights.append(height)
+
+              for _operation, child in timestamp.ops.items():
+                  walk(child)
+
+          walk(detached.timestamp)
+
+          if bitcoin_block_heights:
+              ots_status = "confirmed"
+          elif pending_calendars:
+              ots_status = "pending"
+          else:
+              ots_status = "unattested"
+
+          now = (
+              datetime.datetime.now(datetime.timezone.utc)
+              .isoformat(timespec="seconds")
+              .replace("+00:00", "Z")
+          )
+
+          old = {}
+          if per_seq_path.exists():
+              try:
+                  old = json.loads(
+                      per_seq_path.read_text(encoding="utf-8")
+                  )
+              except Exception:
+                  old = {}
+
+          submitted_at = old.get("submitted_at") or now
+
+          if ots_status == "confirmed":
+              establishment = (
+                  "The canonical checkpoint preimage hashes exactly to the "
+                  "published checkpoint tip, and the upgraded OpenTimestamps "
+                  "proof carries a Bitcoin block attestation."
+              )
+          elif ots_status == "pending":
+              establishment = (
+                  "The canonical checkpoint preimage hashes exactly to the "
+                  "published checkpoint tip, and public OpenTimestamps calendars "
+                  "have accepted the timestamp request. Bitcoin confirmation is "
+                  "not yet claimed."
+              )
+          else:
+              establishment = (
+                  "The canonical checkpoint preimage hashes exactly to the "
+                  "published checkpoint tip. No usable external attestation is "
+                  "currently present in the proof."
+              )
+
+          record = {
+              "schema": "PUBLIC_CONTRACT_OTS_ANCHOR_V1",
+              "seq": seq,
+              "checkpoint_tip": tip,
+              "canonical_preimage": (
+                  f"/x/walk/anchors/{padded}.preimage.json"
+              ),
+              "proof": (
+                  f"/x/walk/anchors/{padded}.preimage.json.ots"
+              ),
+              "proof_method": "OpenTimestamps",
+              "ots_status": ots_status,
+              "submitted_at": submitted_at,
+              "checked_at": now,
+              "pending_calendars": pending_calendars,
+              "bitcoin_block_heights": bitcoin_block_heights,
+              "verification": {
+                  "binding_rule": (
+                      "sha256(canonical_preimage) == checkpoint_tip"
+                  ),
+                  "confirmation_rule": (
+                      "confirmed only when the upgraded proof carries a "
+                      "BitcoinBlockHeaderAttestation"
+                  ),
+              },
+              "what_this_establishes": establishment,
+              "what_this_does_not_establish": (
+                  "This timestamp does not independently prove the truth of "
+                  "the MIR event behind the checkpoint. It externally timestamps "
+                  "Public Contract's committed checkpoint evidence."
+              ),
+          }
+
+          per_seq_path.write_text(
+              json.dumps(record, indent=2, ensure_ascii=True) + "\n",
+              encoding="ascii",
+          )
+          (ANCHORS / "status.json").write_text(
+              json.dumps(record, indent=2, ensure_ascii=True) + "\n",
+              encoding="ascii",
+          )
+
+          # Publish one stable stranger-verification entry point.
+          verify = {
+              "schema": "PUBLIC_CONTRACT_VERIFICATION_SURFACE_V1",
+              "seq": seq,
+              "tip": tip,
+              "status": "/x/walk/status",
+              "checkpoint": f"/x/walk/checkpoints/{padded}.json",
+              "checkpoint_spec": "/x/walk/checkpoint-spec.json",
+              "canonical_preimage": f"/x/walk/anchors/{padded}.preimage.json",
+              "ots_proof": f"/x/walk/anchors/{padded}.preimage.json.ots",
+              "ots_status": "/x/walk/anchors/status.json",
+              "ots_state": ots_status,
+              "verification_sequence": [
+                  "Fetch checkpoint and checkpoint_spec.",
+                  "Derive the allowlisted canonical preimage from the checkpoint.",
+                  "SHA-256 the canonical ASCII bytes and require equality with tip.",
+                  "Fetch the published .ots proof.",
+                  "Upgrade or verify the .ots proof independently; do not treat pending as Bitcoin-confirmed.",
+              ],
+              "trust_boundary": (
+                  "The verification surface publishes evidence and derivation rules. "
+                  "A verifier is expected to recompute rather than trust this record."
+              ),
+          }
+
+          pathlib.Path("x/walk/verify.json").write_text(
+              json.dumps(verify, indent=2, ensure_ascii=True) + "\n",
+              encoding="ascii",
+          )
+
+          # Keep the existing machine status fields intact and add only one
+          # discoverability pointer. The reciprocal witness may temporarily
+          # recreate the minimal three-field status; this workflow restores
+          # the pointer immediately after the witness run completes.
+          status_path = pathlib.Path("x/walk/status")
+          public_status = json.loads(status_path.read_text(encoding="utf-8"))
+          if public_status.get("seq") != seq or public_status.get("tip") != tip:
+              raise SystemExit("status changed during anchor publication; refusing to publish stale verification links")
+          public_status["verify"] = "/x/walk/verify.json"
+          status_path.write_text(
+              json.dumps(public_status, indent=2, ensure_ascii=True) + "\n",
+              encoding="ascii",
+          )
+          PY
+
+      - name: Commit public receipt or upgraded proof state
+        shell: bash
+        run: |
+          if [ -z "$(git status --porcelain -- x/walk/anchors/ x/walk/status x/walk/verify.json)" ]; then
+            echo "No verification-surface change to commit"
+            exit 0
+          fi
+
+          git config user.name "Public Contract OTS Anchor"
+          git config user.email "actions@users.noreply.github.com"
+
+          git add x/walk/anchors/ x/walk/status x/walk/verify.json
+          git commit -m "Anchor Public Contract checkpoint with OpenTimestamps"
+          git pull --rebase origin main
+          git push
+
+# =============================================================================
+# BUILD FOOTER
+# done:
+#   - exact checkpoint-tip preimage reconstruction
+#   - fail-closed hash equality check before timestamping
+#   - immediate OTS submission after reciprocal-witness workflow completion
+#   - public .ots receipt publication
+#   - pending/confirmed state separation
+#   - automatic 30-minute proof upgrade polling
+#   - Bitcoin block-height publication after upgrade
+#   - no mutation of checkpoint chain or MIR observation record
+#   - untracked anchor artifacts detected and committed correctly
+#   - stable /x/walk/verify.json stranger-verification entry point
+#   - /x/walk/status discoverability pointer without changing tip/seq/genesis semantics
+#   - fail-closed requirement for /x/walk/checkpoint-spec.json
+# remaining:
+#   - install x/walk/checkpoint-spec.json
+#   - replace this workflow in the repository
+#   - observe first Actions run
+#   - verify x/walk/verify.json is public and seq/tip match status
+#   - perform stranger recomputation using only published surfaces
+#   - wait only for external Bitcoin/calendar confirmation if status=pending
+# placeholders: NONE
+# =============================================================================
