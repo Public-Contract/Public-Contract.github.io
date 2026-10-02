@@ -1,0 +1,23 @@
+{
+  "schema": "PUBLIC_CONTRACT_EXTERNAL_CHECKPOINT_V1",
+  "seq": 10,
+  "genesis_hash": "051d7248af45eaece4edd55e339bc0b73cd53b4e6a48258ec761fb9ba81623cf",
+  "prior_tip": "b3777c8e6d24f154f792d92083be2ec5e125e000a7d5b73847b125fc551ed9ef",
+  "peer_observation": {
+    "peer": "mir",
+    "peer_host": "mir.events",
+    "peer_tip": "3753cc8e0845721e16b67da1b737fc4cb69792bd614f0a3d1ca2e9b77daaa3e7",
+    "peer_seq": 5052,
+    "peer_genesis_hash": "ed111654e35af6bc2f7de6a1763de15f2175bc0e8720ba72cdd71f6a739f56e6",
+    "observed_at": "2026-10-02T18:39:13.575Z",
+    "liveness": "self-consistent",
+    "source_url": "https://mir.events/v1/transparency/walk/status",
+    "our_seq_at_observation": 9,
+    "our_tip_at_observation": "b3777c8e6d24f154f792d92083be2ec5e125e000a7d5b73847b125fc551ed9ef",
+    "our_checkpoint_seq": 10,
+    "our_checkpoint_tip": "a419b75295631f4b85c0a1443b918c44f25a42df9809aea0fce4a1598702339c"
+  },
+  "tip": "a419b75295631f4b85c0a1443b918c44f25a42df9809aea0fce4a1598702339c",
+  "hash_algorithm": "sha256",
+  "canonicalization": "JSON_SORT_KEYS_COMPACT_ASCII_V1"
+}
