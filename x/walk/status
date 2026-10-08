@@ -1,5 +1,6 @@
 {
   "tip": "d3aa2386a2b3316ad20c32f3e4dc9bedba05e2994fa0265977fd4588e917af1f",
   "seq": 37,
-  "genesis_hash": "051d7248af45eaece4edd55e339bc0b73cd53b4e6a48258ec761fb9ba81623cf"
+  "genesis_hash": "051d7248af45eaece4edd55e339bc0b73cd53b4e6a48258ec761fb9ba81623cf",
+  "verify": "/x/walk/verify.json"
 }
