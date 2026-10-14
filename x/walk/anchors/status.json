@@ -1,27 +1,24 @@
 {
   "schema": "PUBLIC_CONTRACT_OTS_ANCHOR_V1",
-  "seq": 60,
-  "checkpoint_tip": "cacfe904ab2a54674f79ee322ed5ecb9583c971d92e7779ba1638ca5f2859180",
-  "canonical_preimage": "/x/walk/anchors/00000060.preimage.json",
-  "proof": "/x/walk/anchors/00000060.preimage.json.ots",
+  "seq": 61,
+  "checkpoint_tip": "62ae58e2a6f5ac7045897e0be0ef8abc6dd28865b9596f754ccf13dd8983ea30",
+  "canonical_preimage": "/x/walk/anchors/00000061.preimage.json",
+  "proof": "/x/walk/anchors/00000061.preimage.json.ots",
   "proof_method": "OpenTimestamps",
-  "ots_status": "confirmed",
-  "submitted_at": "2026-10-14T07:58:08Z",
-  "checked_at": "2026-10-14T13:03:48Z",
+  "ots_status": "pending",
+  "submitted_at": "2026-10-14T13:58:33Z",
+  "checked_at": "2026-10-14T13:58:33Z",
   "pending_calendars": [
-    "https://btc.calendar.catallaxy.com",
+    "https://bob.btc.calendar.opentimestamps.org",
     "https://finney.calendar.eternitywall.com",
-    "https://alice.btc.calendar.opentimestamps.org",
-    "https://bob.btc.calendar.opentimestamps.org"
+    "https://btc.calendar.catallaxy.com",
+    "https://alice.btc.calendar.opentimestamps.org"
   ],
-  "bitcoin_block_heights": [
-    971402,
-    971378
-  ],
+  "bitcoin_block_heights": [],
   "verification": {
     "binding_rule": "sha256(canonical_preimage) == checkpoint_tip",
     "confirmation_rule": "confirmed only when the upgraded proof carries a BitcoinBlockHeaderAttestation"
   },
-  "what_this_establishes": "The canonical checkpoint preimage hashes exactly to the published checkpoint tip, and the upgraded OpenTimestamps proof carries a Bitcoin block attestation.",
+  "what_this_establishes": "The canonical checkpoint preimage hashes exactly to the published checkpoint tip, and public OpenTimestamps calendars have accepted the timestamp request. Bitcoin confirmation is not yet claimed.",
   "what_this_does_not_establish": "This timestamp does not independently prove the truth of the MIR event behind the checkpoint. It externally timestamps Public Contract's committed checkpoint evidence."
 }
