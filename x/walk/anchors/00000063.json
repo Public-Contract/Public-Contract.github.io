@@ -7,7 +7,7 @@
   "proof_method": "OpenTimestamps",
   "ots_status": "pending",
   "submitted_at": "2026-10-14T22:32:51Z",
-  "checked_at": "2026-10-14T22:32:51Z",
+  "checked_at": "2026-10-15T00:05:31Z",
   "pending_calendars": [
     "https://finney.calendar.eternitywall.com",
     "https://bob.btc.calendar.opentimestamps.org",
