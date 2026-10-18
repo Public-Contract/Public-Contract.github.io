@@ -2,9 +2,23 @@
   "schema": "PUBLIC_CONTRACT_PEER_OBSERVATIONS_V1",
   "holder": "public-contract.github.io",
   "peer": "mir",
-  "count": 85,
+  "count": 86,
   "newest_first": true,
   "tips": [
+    {
+      "peer": "mir",
+      "peer_host": "mir.events",
+      "peer_tip": "bbe4f38c1b318d60d46f1f43f9943f15c8024f859cc39b3467a78a4b6f7df5da",
+      "peer_seq": 5437,
+      "peer_genesis_hash": "ed111654e35af6bc2f7de6a1763de15f2175bc0e8720ba72cdd71f6a739f56e6",
+      "observed_at": "2026-10-18T19:34:50.808Z",
+      "liveness": "self-consistent",
+      "source_url": "https://mir.events/v1/transparency/walk/status",
+      "our_seq_at_observation": 86,
+      "our_tip_at_observation": "a0b8a2dc5e4795d99e44927a4820086b2a18f5a30704697a6f342f6e1fdd35c7",
+      "our_checkpoint_seq": 87,
+      "our_checkpoint_tip": "00c89339f839b67fb930e2c5c27b10037ddc8c79974965303d3b9bcab5388a78"
+    },
     {
       "peer": "mir",
       "peer_host": "mir.events",
