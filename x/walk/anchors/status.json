@@ -1,18 +1,18 @@
 {
   "schema": "PUBLIC_CONTRACT_OTS_ANCHOR_V1",
-  "seq": 94,
-  "checkpoint_tip": "c9dd33b596d51bfd470fb1e901914fa0319d7d138d65dacdd91d277c92512d0d",
-  "canonical_preimage": "/x/walk/anchors/00000094.preimage.json",
-  "proof": "/x/walk/anchors/00000094.preimage.json.ots",
+  "seq": 95,
+  "checkpoint_tip": "c9645fe51dc18846a58bef56521fd3f7858229db90c19f91e06dae319470cf86",
+  "canonical_preimage": "/x/walk/anchors/00000095.preimage.json",
+  "proof": "/x/walk/anchors/00000095.preimage.json.ots",
   "proof_method": "OpenTimestamps",
   "ots_status": "pending",
-  "submitted_at": "2026-10-20T01:13:51Z",
-  "checked_at": "2026-10-20T01:13:51Z",
+  "submitted_at": "2026-10-20T06:29:26Z",
+  "checked_at": "2026-10-20T06:29:26Z",
   "pending_calendars": [
-    "https://finney.calendar.eternitywall.com",
-    "https://btc.calendar.catallaxy.com",
     "https://bob.btc.calendar.opentimestamps.org",
-    "https://alice.btc.calendar.opentimestamps.org"
+    "https://alice.btc.calendar.opentimestamps.org",
+    "https://btc.calendar.catallaxy.com",
+    "https://finney.calendar.eternitywall.com"
   ],
   "bitcoin_block_heights": [],
   "verification": {
