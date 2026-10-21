@@ -1,29 +1,24 @@
 {
   "schema": "PUBLIC_CONTRACT_OTS_ANCHOR_V1",
-  "seq": 101,
-  "checkpoint_tip": "2054a592d2a909340e196e186ca524e50410c8c1d6706c9de512c2118ef2101f",
-  "canonical_preimage": "/x/walk/anchors/00000101.preimage.json",
-  "proof": "/x/walk/anchors/00000101.preimage.json.ots",
+  "seq": 102,
+  "checkpoint_tip": "3ad8d992c716c0d068d0df5664da298f59cff1cbe06da748918dfa5b449d9b52",
+  "canonical_preimage": "/x/walk/anchors/00000102.preimage.json",
+  "proof": "/x/walk/anchors/00000102.preimage.json.ots",
   "proof_method": "OpenTimestamps",
-  "ots_status": "confirmed",
-  "submitted_at": "2026-10-21T10:30:47Z",
-  "checked_at": "2026-10-21T13:11:17Z",
+  "ots_status": "pending",
+  "submitted_at": "2026-10-21T15:32:09Z",
+  "checked_at": "2026-10-21T15:32:09Z",
   "pending_calendars": [
+    "https://alice.btc.calendar.opentimestamps.org",
     "https://btc.calendar.catallaxy.com",
     "https://bob.btc.calendar.opentimestamps.org",
-    "https://finney.calendar.eternitywall.com",
-    "https://alice.btc.calendar.opentimestamps.org"
+    "https://finney.calendar.eternitywall.com"
   ],
-  "bitcoin_block_heights": [
-    972471,
-    972459,
-    972465,
-    972458
-  ],
+  "bitcoin_block_heights": [],
   "verification": {
     "binding_rule": "sha256(canonical_preimage) == checkpoint_tip",
     "confirmation_rule": "confirmed only when the upgraded proof carries a BitcoinBlockHeaderAttestation"
   },
-  "what_this_establishes": "The canonical checkpoint preimage hashes exactly to the published checkpoint tip, and the upgraded OpenTimestamps proof carries a Bitcoin block attestation.",
+  "what_this_establishes": "The canonical checkpoint preimage hashes exactly to the published checkpoint tip, and public OpenTimestamps calendars have accepted the timestamp request. Bitcoin confirmation is not yet claimed.",
   "what_this_does_not_establish": "This timestamp does not independently prove the truth of the MIR event behind the checkpoint. It externally timestamps Public Contract's committed checkpoint evidence."
 }
