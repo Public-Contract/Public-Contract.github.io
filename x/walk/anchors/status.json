@@ -1,26 +1,24 @@
 {
   "schema": "PUBLIC_CONTRACT_OTS_ANCHOR_V1",
-  "seq": 108,
-  "checkpoint_tip": "120f05785a248b564c91eda606f39c85e1abf521d7d4668819e9d2f3443faee8",
-  "canonical_preimage": "/x/walk/anchors/00000108.preimage.json",
-  "proof": "/x/walk/anchors/00000108.preimage.json.ots",
+  "seq": 109,
+  "checkpoint_tip": "3944f8b3eefc4bfd7cf2d1d7b391e591b49148af6282320a08f2d55a6614e1c8",
+  "canonical_preimage": "/x/walk/anchors/00000109.preimage.json",
+  "proof": "/x/walk/anchors/00000109.preimage.json.ots",
   "proof_method": "OpenTimestamps",
-  "ots_status": "confirmed",
-  "submitted_at": "2026-10-22T18:44:48Z",
-  "checked_at": "2026-10-22T20:32:20Z",
+  "ots_status": "pending",
+  "submitted_at": "2026-10-22T22:39:46Z",
+  "checked_at": "2026-10-22T22:39:46Z",
   "pending_calendars": [
-    "https://btc.calendar.catallaxy.com",
-    "https://bob.btc.calendar.opentimestamps.org",
     "https://finney.calendar.eternitywall.com",
-    "https://alice.btc.calendar.opentimestamps.org"
+    "https://bob.btc.calendar.opentimestamps.org",
+    "https://alice.btc.calendar.opentimestamps.org",
+    "https://btc.calendar.catallaxy.com"
   ],
-  "bitcoin_block_heights": [
-    972646
-  ],
+  "bitcoin_block_heights": [],
   "verification": {
     "binding_rule": "sha256(canonical_preimage) == checkpoint_tip",
     "confirmation_rule": "confirmed only when the upgraded proof carries a BitcoinBlockHeaderAttestation"
   },
-  "what_this_establishes": "The canonical checkpoint preimage hashes exactly to the published checkpoint tip, and the upgraded OpenTimestamps proof carries a Bitcoin block attestation.",
+  "what_this_establishes": "The canonical checkpoint preimage hashes exactly to the published checkpoint tip, and public OpenTimestamps calendars have accepted the timestamp request. Bitcoin confirmation is not yet claimed.",
   "what_this_does_not_establish": "This timestamp does not independently prove the truth of the MIR event behind the checkpoint. It externally timestamps Public Contract's committed checkpoint evidence."
 }
