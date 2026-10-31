@@ -7,7 +7,7 @@
   "proof_method": "OpenTimestamps",
   "ots_status": "pending",
   "submitted_at": "2026-10-31T20:14:22Z",
-  "checked_at": "2026-10-31T20:14:22Z",
+  "checked_at": "2026-10-31T20:16:10Z",
   "pending_calendars": [
     "https://bob.btc.calendar.opentimestamps.org",
     "https://alice.btc.calendar.opentimestamps.org",
