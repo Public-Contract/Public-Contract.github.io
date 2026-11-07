@@ -1,12 +1,12 @@
 {
   "schema": "PUBLIC_CONTRACT_VERIFICATION_SURFACE_V1",
-  "seq": 178,
-  "tip": "902e3a6231f9c54ebb8d44ddd1ae5291382bfa4fa1b3ce6bc81d515597a2b0c9",
+  "seq": 179,
+  "tip": "a70863fe78a56d9667e4200ef3e77e084a5e9a174e1c35411a1b126097bae9d6",
   "status": "/x/walk/status",
-  "checkpoint": "/x/walk/checkpoints/00000178.json",
+  "checkpoint": "/x/walk/checkpoints/00000179.json",
   "checkpoint_spec": "/x/walk/checkpoint-spec.json",
-  "canonical_preimage": "/x/walk/anchors/00000178.preimage.json",
-  "ots_proof": "/x/walk/anchors/00000178.preimage.json.ots",
+  "canonical_preimage": "/x/walk/anchors/00000179.preimage.json",
+  "ots_proof": "/x/walk/anchors/00000179.preimage.json.ots",
   "ots_status": "/x/walk/anchors/status.json",
   "ots_state": "pending",
   "verification_sequence": [
