@@ -1,16 +1,16 @@
 {
   "schema": "PUBLIC_CONTRACT_OTS_ANCHOR_V1",
-  "seq": 183,
-  "checkpoint_tip": "a20540a3ae8f354a087910c9c07e61bcc9a9af774451dce53cef9f62745c4597",
-  "canonical_preimage": "/x/walk/anchors/00000183.preimage.json",
-  "proof": "/x/walk/anchors/00000183.preimage.json.ots",
+  "seq": 184,
+  "checkpoint_tip": "cbc910706a06031cb76abd90c8a58a592b67979c0f50bffeab6f856d385a263f",
+  "canonical_preimage": "/x/walk/anchors/00000184.preimage.json",
+  "proof": "/x/walk/anchors/00000184.preimage.json.ots",
   "proof_method": "OpenTimestamps",
   "ots_status": "pending",
-  "submitted_at": "2026-11-08T17:12:49Z",
-  "checked_at": "2026-11-08T18:28:31Z",
+  "submitted_at": "2026-11-08T21:19:50Z",
+  "checked_at": "2026-11-08T21:19:50Z",
   "pending_calendars": [
-    "https://btc.calendar.catallaxy.com",
     "https://finney.calendar.eternitywall.com",
+    "https://btc.calendar.catallaxy.com",
     "https://bob.btc.calendar.opentimestamps.org",
     "https://alice.btc.calendar.opentimestamps.org"
   ],
