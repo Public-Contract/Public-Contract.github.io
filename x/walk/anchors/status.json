@@ -1,27 +1,24 @@
 {
   "schema": "PUBLIC_CONTRACT_OTS_ANCHOR_V1",
-  "seq": 192,
-  "checkpoint_tip": "1823f7440269c122a05248474a037465856bb8e8cb738aaf677fb7d8781f6e46",
-  "canonical_preimage": "/x/walk/anchors/00000192.preimage.json",
-  "proof": "/x/walk/anchors/00000192.preimage.json.ots",
+  "seq": 193,
+  "checkpoint_tip": "752ebfebb087ea33c11c28ed09f30625a47f5f4b5a3a8f96d8a6548cbc29181b",
+  "canonical_preimage": "/x/walk/anchors/00000193.preimage.json",
+  "proof": "/x/walk/anchors/00000193.preimage.json.ots",
   "proof_method": "OpenTimestamps",
-  "ots_status": "confirmed",
-  "submitted_at": "2026-11-11T08:15:27Z",
-  "checked_at": "2026-11-11T15:06:49Z",
+  "ots_status": "pending",
+  "submitted_at": "2026-11-11T16:30:53Z",
+  "checked_at": "2026-11-11T16:30:53Z",
   "pending_calendars": [
+    "https://alice.btc.calendar.opentimestamps.org",
     "https://btc.calendar.catallaxy.com",
-    "https://bob.btc.calendar.opentimestamps.org",
     "https://finney.calendar.eternitywall.com",
-    "https://alice.btc.calendar.opentimestamps.org"
+    "https://bob.btc.calendar.opentimestamps.org"
   ],
-  "bitcoin_block_heights": [
-    975415,
-    975429
-  ],
+  "bitcoin_block_heights": [],
   "verification": {
     "binding_rule": "sha256(canonical_preimage) == checkpoint_tip",
     "confirmation_rule": "confirmed only when the upgraded proof carries a BitcoinBlockHeaderAttestation"
   },
-  "what_this_establishes": "The canonical checkpoint preimage hashes exactly to the published checkpoint tip, and the upgraded OpenTimestamps proof carries a Bitcoin block attestation.",
+  "what_this_establishes": "The canonical checkpoint preimage hashes exactly to the published checkpoint tip, and public OpenTimestamps calendars have accepted the timestamp request. Bitcoin confirmation is not yet claimed.",
   "what_this_does_not_establish": "This timestamp does not independently prove the truth of the MIR event behind the checkpoint. It externally timestamps Public Contract's committed checkpoint evidence."
 }
