@@ -1,28 +1,24 @@
 {
   "schema": "PUBLIC_CONTRACT_OTS_ANCHOR_V1",
-  "seq": 199,
-  "checkpoint_tip": "71df8bc96807fc28949d76532ac47aa573a2d33198ba76796bcbd5838f60edaa",
-  "canonical_preimage": "/x/walk/anchors/00000199.preimage.json",
-  "proof": "/x/walk/anchors/00000199.preimage.json.ots",
+  "seq": 200,
+  "checkpoint_tip": "2200e0cd6e51c9e88d131a2d0c2ec53e45f33438ae5d6d7117fe82d4f95f6de6",
+  "canonical_preimage": "/x/walk/anchors/00000200.preimage.json",
+  "proof": "/x/walk/anchors/00000200.preimage.json.ots",
   "proof_method": "OpenTimestamps",
-  "ots_status": "confirmed",
-  "submitted_at": "2026-11-13T09:54:45Z",
-  "checked_at": "2026-11-13T15:39:57Z",
+  "ots_status": "pending",
+  "submitted_at": "2026-11-13T17:59:14Z",
+  "checked_at": "2026-11-13T17:59:14Z",
   "pending_calendars": [
-    "https://bob.btc.calendar.opentimestamps.org",
     "https://finney.calendar.eternitywall.com",
-    "https://btc.calendar.catallaxy.com",
-    "https://alice.btc.calendar.opentimestamps.org"
+    "https://bob.btc.calendar.opentimestamps.org",
+    "https://alice.btc.calendar.opentimestamps.org",
+    "https://btc.calendar.catallaxy.com"
   ],
-  "bitcoin_block_heights": [
-    975663,
-    975675,
-    975661
-  ],
+  "bitcoin_block_heights": [],
   "verification": {
     "binding_rule": "sha256(canonical_preimage) == checkpoint_tip",
     "confirmation_rule": "confirmed only when the upgraded proof carries a BitcoinBlockHeaderAttestation"
   },
-  "what_this_establishes": "The canonical checkpoint preimage hashes exactly to the published checkpoint tip, and the upgraded OpenTimestamps proof carries a Bitcoin block attestation.",
+  "what_this_establishes": "The canonical checkpoint preimage hashes exactly to the published checkpoint tip, and public OpenTimestamps calendars have accepted the timestamp request. Bitcoin confirmation is not yet claimed.",
   "what_this_does_not_establish": "This timestamp does not independently prove the truth of the MIR event behind the checkpoint. It externally timestamps Public Contract's committed checkpoint evidence."
 }
